@@ -84,12 +84,14 @@ get_discordr_webhook <- function(){
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
 send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
-  body_data <- list(content = message,
-                    username = username)
+  if(nchar(message) > 0){
+    body_data <- list(content = message,
+                      username = username)
 
-  POST(url = webhook,
-       body = body_data,
-       encode = "json")
+    POST(url = webhook,
+         body = body_data,
+         encode = "json")
+  }
 }
 
 #' Send File
