@@ -88,7 +88,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     body_data <- list(content = message,
                       username = username)
 
-    response <- POST(url = webhook,
+    response <- httr::POST(url = webhook,
                      body = body_data,
                      encode = "json")
   }
@@ -116,7 +116,7 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
     body_data <- list(content = upload_file(filename),
                       username = username)
 
-    response <- POST(url = webhook,
+    response <- httr::POST(url = webhook,
                      body = body_data,
                      encode = 'multipart')
   }
@@ -151,7 +151,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
   body_data <- list(content = upload_file(random_filename),
                     username = username)
 
-  response <- POST(url = webhook,
+  response <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
@@ -180,7 +180,7 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.png', sep = '')
 
   if(!is.null(last_plot())){
-    ggsave(random_filename)
+    ggplot2::ggsave(random_filename)
   }
   else {
     stop('No previous ggplot found.')
@@ -189,7 +189,7 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   body_data <- list(content = upload_file(random_filename),
                     username = username)
 
-  response <- POST(url = webhook,
+  response <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
