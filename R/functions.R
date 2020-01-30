@@ -118,6 +118,9 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
          body = body_data,
          encode = 'multipart')
   }
+  else {
+    stop("File not found.")
+  }
 }
 
 #' Send Current Plot
