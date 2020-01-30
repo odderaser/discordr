@@ -27,8 +27,8 @@ set_discordr_username <- function(username){
 #' get_discordr_username()
 get_discordr_username <- function(){
   username <- Sys.getenv("DISCORDR_USERNAME")
-  if(username == ""){
-    stop("Default Discord Username not set. Use set_discordr_username to set a default webhook as an environment variable.")
+  if(nchar(username) == 0){
+    stop("Default discordr username not set. Use set_discordr_username to set a default webhook as an environment variable.")
   }
   return(username)
 }
@@ -59,8 +59,8 @@ set_discordr_webhook <- function(webhook_address){
 #' get_discordr_webhook()
 get_discordr_webhook <- function(){
   webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
-  if(webhook_address == ""){
-    stop("Default Discord Webhook not set. Use set_discordr_webhook to set a default webhook as an environment variable.")
+  if(nchar(webhook_address) == 0){
+    stop("Default discordr webhook not set. Use set_discordr_webhook to set a default webhook as an environment variable.")
   }
   return(webhook_address)
 }

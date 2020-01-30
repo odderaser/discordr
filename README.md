@@ -23,7 +23,7 @@ This packages functions through Discord's easy-to-use webhook system. If you are
 library(discordr)
 
 set_discordr_username("dataman")
-set_discordr_webhook("https://discord.com/your-webhook-here")
+set_discordr_webhook("https://discordapp.com/api/webhooks/<your-webhook-here>")
 ```
 
 ## Examples
