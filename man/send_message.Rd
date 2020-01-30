@@ -26,10 +26,10 @@ Sends a message using the username provided to the channel of the webhook provid
 \examples{
 send_message("Hello World!")
 send_message("Hello World!", username = "dataman")
-send_message("Hello World!", webhook = "https://discord.com/etc")
-send_message("Hello World!", username = "dataman", webhook = "https://discord.com/etc")
+send_message("Hello World!", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
+send_message("Hello World!", username = "dataman", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
 
 }
 \seealso{
-\code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+\code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 }

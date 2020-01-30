@@ -79,7 +79,7 @@ get_discordr_webhook <- function(){
 #' send_message("Hello World!", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
 #' send_message("Hello World!", username = "dataman", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
 #'
-#' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+#' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
   if(nchar(message) > 0){
     body_data <- list(content = message,
@@ -106,7 +106,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 #' send_file('image.jpg')
 #'
 #' @seealso
-#' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+#' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
 
   if(file.exists(filename)){
@@ -138,7 +138,7 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #' send_current_plot()
 #'
 #' @seealso
-#' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}
+#' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook()){
   random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.png', sep = '')
 
@@ -172,7 +172,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #' send_current_ggplot()
 #'
 #' @seealso
-#' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}
+#' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook()){
   random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.png', sep = '')
 
@@ -195,6 +195,21 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   }
 }
 
+#' Send Console Output
+#'
+#' This functions accepts an expression whose console output you would like to send to the specified discord channel
+#'
+#' @param ... A single or set of expressions to be evaluated for console output
+#' @param username Username to use for sender of message, defaults to environment set username
+#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' send_console(2 + 2)
+#' #' @seealso
+#' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
 send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook()){
   random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.txt', sep = '')
 

@@ -2,6 +2,7 @@
 
 export(get_discordr_username)
 export(get_discordr_webhook)
+export(send_console)
 export(send_current_ggplot)
 export(send_current_plot)
 export(send_file)

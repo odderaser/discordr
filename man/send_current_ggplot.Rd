@@ -26,5 +26,5 @@ send_current_ggplot()
 
 }
 \seealso{
-\code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}
+\code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 }
