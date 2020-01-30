@@ -198,3 +198,31 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   }
 }
 
+send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook()){
+  random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.txt', sep = '')
+
+  sink(file = random_filename, split = TRUE)
+
+  # code heavily inspired by capture.output
+  pf = parent.frame()
+  args <- substitute(list(...))[-1L]
+  evalVis <- function(expr) withVisible(eval(expr, pf))
+  for(i in 1:seq_along(args)){
+    expr <- args[[1]]
+    tmp <- switch(mode(expr), expression = lapply(expr, evalVis), call = , name = list(evalVis(expr)), stop("bad argument"))
+    for (item in tmp) if (item$visible)
+      print(item$value)
+  }
+
+  sink()
+
+  console_output <- readChar(random_filename, file.info(random_filename)$size)
+  console_output <- paste('```', console_output, '```')
+
+  send_message(console_output, username = username, webhook = webhook)
+
+  if(file.exists(random_filename)){
+    file.remove(random_filename)
+  }
+}
+
