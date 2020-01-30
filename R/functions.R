@@ -88,9 +88,9 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     body_data <- list(content = message,
                       username = username)
 
-    POST(url = webhook,
-         body = body_data,
-         encode = "json")
+    response <- POST(url = webhook,
+                     body = body_data,
+                     encode = "json")
   }
 }
 
@@ -116,9 +116,9 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
     body_data <- list(content = upload_file(filename),
                       username = username)
 
-    POST(url = webhook,
-         body = body_data,
-         encode = 'multipart')
+    response <- POST(url = webhook,
+                     body = body_data,
+                     encode = 'multipart')
   }
   else {
     stop("File not found.")
@@ -151,9 +151,9 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
   body_data <- list(content = upload_file(random_filename),
                     username = username)
 
-  POST(url = webhook,
-       body = body_data,
-       encode = "multipart")
+  response <- POST(url = webhook,
+                   body = body_data,
+                   encode = "multipart")
 
   if(file.exists(random_filename)){
     file.remove(random_filename)
@@ -189,9 +189,9 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   body_data <- list(content = upload_file(random_filename),
                     username = username)
 
-  POST(url = webhook,
-       body = body_data,
-       encode = "multipart")
+  response <- POST(url = webhook,
+                   body = body_data,
+                   encode = "multipart")
 
   if(file.exists(random_filename)){
     file.remove(random_filename)
