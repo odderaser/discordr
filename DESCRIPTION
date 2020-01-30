@@ -1,14 +1,17 @@
 Package: discordr
-Title: What the Package Does (One Line, Title Case)
+Title: Utility Functions For Sending R Output To Discord (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Jordan",
+           family = "Love",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "jordan@notunlikely.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
+Imports:
+    ggplot2,
+    httr
