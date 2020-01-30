@@ -1,6 +1,3 @@
-library(httr)
-library(ggplot2)
-
 #' Set Default Discordr Username
 #'
 #' Sets a default username to be used for discord communication. Use \code{\link{get_discordr_username}} to check currently set default username.
