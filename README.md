@@ -1,5 +1,5 @@
 
-# discordr - A set of utility functions for interaction with Discord through R and RStudio
+# discordr
 
 <!-- badges: start -->
 <!-- badges: end -->
