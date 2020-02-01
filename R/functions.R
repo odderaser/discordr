@@ -63,55 +63,64 @@ get_discordr_webhook <- function(){
 }
 
 discordr_setup <- function(){
-  print('Welcome to discordr!')
-  print('Would you like to setup a new configuration or check for an existing one?')
-  print('')
-  print('1. Check for existing configuration')
-  print('2. Setup new configuration')
+  nice_print <- function(x = '') paste(x, '\n') %>% cat()
 
-  setup_menu_choice <- readline(prompt="Enter option: ")
+  nice_print('Welcome to discordr!')
+  nice_print('Would you like to setup a new configuration or check for an existing one?')
+  setup_menu_choice <- menu(c('Check for existing configuration', 'Setup new configuration'), graphics = FALSE, title = NULL)
+
   if(as.integer(setup_menu_choice) == 1){
     webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
     if(nchar(webhook_address) == 0){
-      print('No default environment webhook found. Would you like to setup a default webhook?')
-      print('1. Uh huh.')
-      print('2. Nope!')
-      webhook_menu_choice <- readline(prompt = 'Enter option: ')
+      nice_print('No default environment webhook found. Would you like to setup a default webhook?')
+      webhook_menu_choice <- menu(c('Uh huh.', 'Nope!'), graphics = FALSE, title = NULL)
       if(as.integer(webhook_menu_choice) == 1){
         webhook_address <- readline(prompt = "Enter Webhook URL:")
         set_discordr_webhook(webhook_address)
       }
     }
-    print('')
+    else {
+      nice_print(paste("We found the following default environment webhook set: ", webhook_address))
+      nice_print("Would you like to change it?")
+      change_webhook_choice <- menu(c("Yes, please!", "No thanks."), graphics = FALSE, title = NULL)
+      if(change_webhook_choice == 1){
+        webhook_address <- readline(prompt = "Enter Webhook (enter empty string to remove existing default):")
+        set_discordr_username(webhook_address)
+      }
+    }
+
     username <- Sys.getenv("DISORDR_USERNAME")
     if(nchar(username) == 0){
-      print('No default environment username found. Would you like to setup a default username?')
-      print('1. You bet!')
-      print('2. Nah.')
-      username_menu_choice <- readline(prompt = 'Enter option: ')
+      nice_print('No default environment username found. Would you like to setup a default username?')
+      webhook_menu_choice <- menu(c('You bet!', 'Nah.'), graphics = FALSE, title = NULL)
       if(as.integer(webhook_menu_choice) == 1){
         username <- readline(prompt = "Enter Username:")
         set_discordr_username(username)
       }
     }
-    print('')
+    else {
+      nice_print(paste("We found the following default environment username set: ", username))
+      nice_print("Would you like to change it?")
+      change_username_choice <- menu(c("Yes, please!", "No thanks."), graphics = FALSE, title = NULL)
+      if(change_username_choice == 1){
+        username <- readline(prompt = "Enter Username (enter empty string to remove existing default):")
+        set_discordr_username(username)
+      }
+    }
 
-    print("Great! You're set it looks like. Use send_message('Hello World!') to test connectivity and include webhook and/or username manually if you left them empty.")
+    nice_print("Great! You're set it looks like. Use send_message('Hello World!') to test connectivity and include webhook and/or username manually if you left them empty during configuration.")
   }
   else if(as.integer(setup_menu_choice) == 2){
 
-    print('Enter the webhook URL for the channel you would like to communicate with.')
+    nice_print('Enter the webhook URL for the channel you would like to communicate with.')
     webhook_address <- readline(prompt = "Enter Webhook URL:")
     set_discordr_webhook(webhook_address)
 
-    print('Enter a name to be attached to communication sent using this package.')
+    nice_print('Enter a name to be attached to communication sent using this package.')
     username <- readline(prompt = "Enter Username:")
     set_discordr_username(username)
 
-    print("Great! You're all set! Use the send_message('Hello World!') function to test connectivity.")
-  }
-  else {
-    stop('Invalid menu choice.')
+    nice_print("Great! You're all set! Use the send_message('Hello World!') function to test connectivity.")
   }
 }
 
