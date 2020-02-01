@@ -110,7 +110,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
 
   if(file.exists(filename)){
-    body_data <- list(content = upload_file(filename),
+    body_data <- list(content = httr::upload_file(filename),
                       username = username)
 
     response <- httr::POST(url = webhook,
@@ -145,7 +145,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
   image_dimensions <- grDevices::dev.size("px")
   rstudioapi::savePlotAsImage(file = random_filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = upload_file(random_filename),
+  body_data <- list(content = httr::upload_file(random_filename),
                     username = username)
 
   response <- httr::POST(url = webhook,
@@ -183,7 +183,7 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
     stop('No previous ggplot found.')
   }
 
-  body_data <- list(content = upload_file(random_filename),
+  body_data <- list(content = httr::upload_file(random_filename),
                     username = username)
 
   response <- httr::POST(url = webhook,
