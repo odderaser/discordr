@@ -62,6 +62,15 @@ get_discordr_webhook <- function(){
   return(webhook_address)
 }
 
+#' Discordr Setup Wizard
+#'
+#' Walks the user through checking if an existing configuration exists, changing an existing configuration, or setting up a new configuration.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' discordr_setup()
 discordr_setup <- function(){
   nice_print <- function(x = '') paste(x, '\n') %>% cat()
 
