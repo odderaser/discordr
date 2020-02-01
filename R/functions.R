@@ -240,7 +240,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 
 # for internal use only
 generate_random_filename <- function(file_suffix){
-  if(sub_str(file_suffix, 1, 1) == '.'){
+  if(substr(file_suffix, 1, 1) == '.'){
     random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), file_suffix, sep = '')
   }
   else {
