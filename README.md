@@ -17,13 +17,12 @@ install_github("EriqLaplus/discordr")
 
 ## Setup
 
-This packages functions through Discord's easy-to-use webhook system. If you are the owner or administrator of a channel, you can setup a webhook by entering the channel settings (edit channel) and navigating to the webhook tab. If you are the participant of a channel, you may request a webhook from an administrator in order to use this package. While not required, it is recommended to set a default username and webhook for easier use.
+This packages functions through Discord's easy-to-use webhook system. If you are the owner or administrator of a channel, you can setup a webhook by entering the channel settings (edit channel) and navigating to the webhook tab. If you are the participant of a channel, you may request a webhook from an administrator in order to use this package. While not required, it is recommended to set a default username and webhook for easier use. In order to easily setup a webhook and username, the setup function `discordr_setup()` can be called for an interactive menu walkthrough. See documentation for programmatically setting a default environment webhook and username.
 
 ``` r
 library(discordr)
 
-set_discordr_username("dataman")
-set_discordr_webhook("https://discordapp.com/api/webhooks/<your-webhook-here>")
+discordr_setup()
 ```
 
 ## Examples
