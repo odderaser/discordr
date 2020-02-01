@@ -249,6 +249,20 @@ generate_random_filename <- function(file_suffix){
   return(random_filename)
 }
 
+#' Send R Objects
+#'
+#' @param ... Single or Multiple R Objects to be contained within a single RData file
+#' @param filename Default is a random string; change this if you would like the RData file to be human-readable
+#' @param username Username to use for sender of message, defaults to environment set username
+#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' x <- c(1,2,3,4,5)
+#' y <- matrix(rep(0, 4), rows = 2, cols = 2)
+#' send_robject(x, y, filename = 'test_data.RData')
 send_robject <- function(..., filename = generate_random_filename('.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
 
   save(..., file = filename)
