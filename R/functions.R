@@ -249,15 +249,14 @@ generate_random_filename <- function(file_suffix){
   return(random_filename)
 }
 
-send_robject <- function(..., filename = generate_random_filename(), username = get_discordr_username(), webhook = get_discordr_webhook()){
-  rdata_filename <- paste(filename, '.RData', sep = '')
+send_robject <- function(..., filename = generate_random_filename('.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
 
-  save(..., file = rdata_filename)
+  save(..., file = filename)
 
-  send_file(rdata_filename, username = username, webhook = webhook)
+  send_file(filename, username = username, webhook = webhook)
 
-  if(file.exists(rdata_filename)){
-    file.remove(rdata_filename)
+  if(file.exists(filename)){
+    file.remove(filename)
   }
 }
 
