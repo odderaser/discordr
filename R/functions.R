@@ -238,3 +238,21 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
   }
 }
 
+# for internal use only
+generate_random_filename <- function(){
+  random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.txt', sep = '')
+  return(random_filename)
+}
+
+send_robject <- function(..., filename = generate_random_filename(), username = get_discordr_username(), webhook = get_discordr_webhook()){
+  rdata_filename <- paste(filename, '.RData', sep = '')
+
+  save(..., file = rdata_filename)
+
+  send_file(rdata_filename, username = username, webhook = webhook)
+
+  if(file.exists(rdata_filename)){
+    file.remove(rdata_filename)
+  }
+}
+
