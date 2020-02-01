@@ -62,6 +62,59 @@ get_discordr_webhook <- function(){
   return(webhook_address)
 }
 
+discordr_setup <- function(){
+  print('Welcome to discordr!')
+  print('Would you like to setup a new configuration or check for an existing one?')
+  print('')
+  print('1. Check for existing configuration')
+  print('2. Setup new configuration')
+
+  setup_menu_choice <- readline(prompt="Enter option: ")
+  if(as.integer(setup_menu_choice) == 1){
+    webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
+    if(nchar(webhook_address) == 0){
+      print('No default environment webhook found. Would you like to setup a default webhook?')
+      print('1. Uh huh.')
+      print('2. Nope!')
+      webhook_menu_choice <- readline(prompt = 'Enter option: ')
+      if(as.integer(webhook_menu_choice) == 1){
+        webhook_address <- readline(prompt = "Enter Webhook URL:")
+        set_discordr_webhook(webhook_address)
+      }
+    }
+    print('')
+    username <- Sys.getenv("DISORDR_USERNAME")
+    if(nchar(username) == 0){
+      print('No default environment username found. Would you like to setup a default username?')
+      print('1. You bet!')
+      print('2. Nah.')
+      username_menu_choice <- readline(prompt = 'Enter option: ')
+      if(as.integer(webhook_menu_choice) == 1){
+        username <- readline(prompt = "Enter Username:")
+        set_discordr_username(username)
+      }
+    }
+    print('')
+
+    print("Great! You're set it looks like. Use send_message('Hello World!') to test connectivity and include webhook and/or username manually if you left them empty.")
+  }
+  else if(as.integer(setup_menu_choice) == 2){
+
+    print('Enter the webhook URL for the channel you would like to communicate with.')
+    webhook_address <- readline(prompt = "Enter Webhook URL:")
+    set_discordr_webhook(webhook_address)
+
+    print('Enter a name to be attached to communication sent using this package.')
+    username <- readline(prompt = "Enter Username:")
+    set_discordr_username(username)
+
+    print("Great! You're all set! Use the send_message('Hello World!') function to test connectivity.")
+  }
+  else {
+    stop('Invalid menu choice.')
+  }
+}
+
 #' Send Message
 #'
 #' Sends a message using the username provided to the channel of the webhook provided
