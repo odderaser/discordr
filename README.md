@@ -4,7 +4,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of discordr is to make writing bots and collaborating in Discord easier through a set of utility functions.
+The goal of discordr is to make collaborating in Discord easier through a set of utility functions.
 
 ## Installation
 
