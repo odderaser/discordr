@@ -300,9 +300,36 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
   sink()
 
   console_output <- readChar(random_filename, file.info(random_filename)$size)
-  console_output <- paste('```', console_output, '```')
 
-  send_message(console_output, username = username, webhook = webhook)
+  ### Clean up this code
+  # Create easy function for padding message with code quotes, maybe in send_message?
+  # Streamline loop process by removing initialization, move check for empty string to else case, remove subsetting in forloop
+  # name variables better
+
+  if(file.info(random_filename)$size > 1990){
+    console_output_split <- unlist(stringr::str_split(console_output, '\n'))
+    current_console_output_split <- console_output_split[1]
+    temp_total <- nchar(current_console_output_split) + 2
+    for(console_output_substr in console_output_split[2:length(console_output_split)]){
+      if(temp_total + nchar(console_output_substr) > 1990){
+        current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
+        send_message(current_console_output_split, username = username, webhook = webhook)
+
+        current_console_output_split <- console_output_substr
+        temp_total <- nchar(console_output_substr) + 2
+      }
+      else {
+        temp_total <- temp_total + nchar(console_output_substr) + 2
+        current_console_output_split <- paste(current_console_output_split, console_output_substr, sep = '\n')
+      }
+    }
+    current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
+    send_message(current_console_output_split, username = username, webhook = webhook)
+  }
+  else {
+    console_output <- paste('```', console_output, '```', sep = '\n')
+    send_message(console_output, username = username, webhook = webhook)
+  }
 
   if(file.exists(random_filename)){
     file.remove(random_filename)
