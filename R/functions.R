@@ -160,6 +160,8 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
                      body = body_data,
                      encode = "json")
   }
+
+  invisible(res)
 }
 
 #' Send File
@@ -187,6 +189,8 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
     res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = 'multipart')
+
+    invisible(res)
   }
   else {
     stop("File not found.")
@@ -346,6 +350,7 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 
   save(..., file = filename)
 
-  send_file(filename, username = username, webhook = webhook)
+  res <-send_file(filename, username = username, webhook = webhook)
+  invisible(res)
 }
 
