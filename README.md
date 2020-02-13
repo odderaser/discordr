@@ -27,7 +27,7 @@ discordr_setup()
 
 ## Examples
 
-Once setup, there are five possible ways to interact with Discord through this package: sending messages, sending files, sending the current plot from RStudio, ,sending console output, or sending r objects directly from RStudio. For sending messages, use the `send_message` function with a character string. See package documentation if you are not setting a default username and/or default webhook
+Once setup, there are five possible ways to interact with Discord through this package: sending messages, sending files, sending the current plot from RStudio, sending console output, sending r objects directly from RStudio, or even sending example compiled latex to others! For sending messages, use the `send_message` function with a character string. See package documentation if you are not setting a default username and/or default webhook
 
 ``` r
 send_message("Hello World!")
@@ -52,10 +52,22 @@ lm_model <- lm(x ~ y)
 send_console(summary(lm_model))
 ```
 
-Finally, you can bundle R objects you're working with into a single `RData` file to be sent to collaborators through the `send_robject` function.
+You can bundle R objects you're working with into a single `RData` file to be sent to collaborators through the `send_robject` function.
 
 ``` r
 x <- c(1,2,3,4,5)
 y <- matrix(rep(0, 4), nrows = 2)
 send_robject(x, y, filename = 'my_data.RData')
 ```
+
+Maybe you're interested in running that latex model description past someone, you can do so using the `send_tex` function.
+
+``` r
+# use double slashes where you would normally use single slashes...
+tex_string <- '$y_{ijk} = \\mu + \\alpha_i + \beta_j + \epsilon_{ijk}$'
+send_tex(tex_string)
+```
+
+## Issues
+
+Please create an issue within this repository if you have any difficulty or error using the package.
