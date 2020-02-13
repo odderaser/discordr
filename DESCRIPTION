@@ -15,5 +15,6 @@ RoxygenNote: 7.0.2
 Imports:
     ggplot2,
     httr,
-    stringr,
+    stringr
+Suggests:
     texPreview

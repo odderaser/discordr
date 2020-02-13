@@ -370,6 +370,10 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 #' @examples
 send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, username = get_discordr_username(), webhook = get_discordr_webhook()){
 
+  if (!requireNamespace("texPreview", quietly = TRUE)){
+    stop("Package \"texPreview\" needed for this function to work. Please install it.",
+         call. = FALSE)
+  }
   texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
 
   res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
