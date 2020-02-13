@@ -331,7 +331,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 #' Send R Objects
 #'
 #' @param ... Single or Multiple R Objects to be contained within a single RData file
-#' @param filename Default is a random string; change this if you would like the RData file to be human-readable
+#' @param filename Default is a random string saved in the temporary directory; change this if you would like the RData file to be human-readable and in a different location.
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #'
