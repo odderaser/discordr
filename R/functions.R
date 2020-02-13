@@ -358,6 +358,8 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 
 #' Send Rendered Latex Images
 #'
+#' In order to use this function, you will need to install the texPreview package manually.
+#'
 #' @param tex_string Character string of compileable latex code. Ensure you are using double slashes ('\\') for commands.
 #' @param filename Default is a random string saved in the temporary directory; change this if you would like the RData file to be human-readable and in a different location.
 #' @param density Density of latex image to be saved. Default is 250.

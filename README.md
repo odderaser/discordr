@@ -60,7 +60,7 @@ y <- matrix(rep(0, 4), nrows = 2)
 send_robject(x, y, filename = 'my_data.RData')
 ```
 
-Maybe you're interested in running that latex model description past someone, you can do so using the `send_tex` function.
+Maybe you're interested in running that latex model description past someone, you can do so using the `send_tex` function. I expect this functionality to be used only by a small fraction of users, and I would like to respect users who would prefer not to install many packages as dependences. If you would like to use this functionality, you will need to install the `texPreview` package manually.  
 
 ``` r
 # use double slashes where you would normally use single slashes...
