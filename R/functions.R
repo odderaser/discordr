@@ -201,6 +201,7 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #'
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
 #' @return
 #' @export
@@ -210,19 +211,19 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #'
 #' @seealso
 #' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook()){
-  random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.png', sep = '')
+send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   image_dimensions <- grDevices::dev.size("px")
-  rstudioapi::savePlotAsImage(file = random_filename, width = image_dimensions[1], height = image_dimensions[2])
+  rstudioapi::savePlotAsImage(file = filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = httr::upload_file(random_filename),
+  body_data <- list(content = httr::upload_file(filename),
                     username = username)
 
-  response <- httr::POST(url = webhook,
+  res <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
+  invisible(res)
 }
 
 #' Send Current Plot (ggplot version)
@@ -257,7 +258,6 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   response <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
-
 }
 
 #' Send Console Output
@@ -324,7 +324,6 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
     console_output <- paste('```', console_output, '```', sep = '\n')
     send_message(console_output, username = username, webhook = webhook)
   }
-
 }
 
 # for internal use only
@@ -357,6 +356,5 @@ send_robject <- function(..., filename = generate_random_filename('.RData'), use
   save(..., file = filename)
 
   send_file(filename, username = username, webhook = webhook)
-
 }
 
