@@ -278,10 +278,9 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
 #' send_console(2 + 2)
 #' #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
-send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook()){
-  random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.txt', sep = '')
+send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr')){
 
-  sink(file = random_filename, split = TRUE)
+  sink(file = filename, split = TRUE)
 
   # code heavily inspired by capture.output
   pf = parent.frame()
@@ -296,14 +295,14 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 
   sink()
 
-  console_output <- readChar(random_filename, file.info(random_filename)$size)
+  console_output <- readChar(filename, file.info(filename)$size)
 
   ### Clean up this code
   # Create easy function for padding message with code quotes, maybe in send_message?
   # Streamline loop process by removing initialization, move check for empty string to else case, remove subsetting in forloop
   # name variables better
 
-  if(file.info(random_filename)$size > 1990){
+  if(file.info(filename)$size > 1990){
     console_output_split <- unlist(stringr::str_split(console_output, '\n'))
     current_console_output_split <- console_output_split[1]
     temp_total <- nchar(current_console_output_split) + 2
