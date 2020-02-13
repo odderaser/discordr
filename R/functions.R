@@ -156,7 +156,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     body_data <- list(content = message,
                       username = username)
 
-    response <- httr::POST(url = webhook,
+    res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = "json")
   }
@@ -184,7 +184,7 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
     body_data <- list(content = httr::upload_file(filename),
                       username = username)
 
-    response <- httr::POST(url = webhook,
+    res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = 'multipart')
   }
@@ -233,6 +233,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #'
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
 #' @return
 #' @export
@@ -242,22 +243,24 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #'
 #' @seealso
 #' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook()){
-  random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.png', sep = '')
+send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+  filename
 
   if(!is.null(last_plot())){
-    ggplot2::ggsave(random_filename)
+    ggplot2::ggsave(filename)
   }
   else {
     stop('No previous ggplot found.')
   }
 
-  body_data <- list(content = httr::upload_file(random_filename),
+  body_data <- list(content = httr::upload_file(filename),
                     username = username)
 
-  response <- httr::POST(url = webhook,
+  res <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
+
+  invisble(res)
 }
 
 #' Send Console Output
