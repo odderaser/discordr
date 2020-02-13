@@ -342,7 +342,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 #' x <- c(1,2,3,4,5)
 #' y <- matrix(rep(0, 4), rows = 2, cols = 2)
 #' send_robject(x, y, filename = 'test_data.RData')
-send_robject <- function(..., filename = generate_random_filename('.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
+send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
 
   save(..., file = filename)
 
