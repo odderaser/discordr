@@ -303,7 +303,9 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 
   ### Clean up this code
   # Create easy function for padding message with code quotes, maybe in send_message?
-  # Streamline loop process by removing initialization, move check for empty string to else case, remove subsetting in forloop
+  # Streamline loop process by removing initialization,
+  # move check for empty string to else case,
+  # remove subsetting in forloop
   # name variables better
 
   if(file.info(filename)$size > 1990){
