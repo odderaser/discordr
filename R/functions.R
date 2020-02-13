@@ -223,9 +223,6 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
                    body = body_data,
                    encode = "multipart")
 
-  if(file.exists(random_filename)){
-    file.remove(random_filename)
-  }
 }
 
 #' Send Current Plot (ggplot version)
@@ -261,9 +258,6 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
                    body = body_data,
                    encode = "multipart")
 
-  if(file.exists(random_filename)){
-    file.remove(random_filename)
-  }
 }
 
 #' Send Console Output
@@ -331,9 +325,6 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
     send_message(console_output, username = username, webhook = webhook)
   }
 
-  if(file.exists(random_filename)){
-    file.remove(random_filename)
-  }
 }
 
 # for internal use only
@@ -367,8 +358,5 @@ send_robject <- function(..., filename = generate_random_filename('.RData'), use
 
   send_file(filename, username = username, webhook = webhook)
 
-  if(file.exists(filename)){
-    file.remove(filename)
-  }
 }
 
