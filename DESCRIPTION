@@ -1,5 +1,5 @@
 Package: discordr
-Title: Utility Functions For Sending R Output To Discord (One Line, Title Case)
+Title: Utility Functions For Sending R Output To Discord
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Jordan",
@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "jordan@notunlikely.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Discordr creates a set of utility function for sending content from R or RStudio to Discord via Discord's easy-to-use webhook architecture. 
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
