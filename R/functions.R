@@ -328,17 +328,6 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
   }
 }
 
-# for internal use only
-generate_random_filename <- function(file_suffix){
-  if(substr(file_suffix, 1, 1) == '.'){
-    random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), file_suffix, sep = '')
-  }
-  else {
-    random_filename <- paste(paste(sample(LETTERS, 15, replace = TRUE), collapse = ''), '.', file_suffix, sep = '')
-  }
-  return(random_filename)
-}
-
 #' Send R Objects
 #'
 #' @param ... Single or Multiple R Objects to be contained within a single RData file
