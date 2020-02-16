@@ -68,6 +68,8 @@ tex_string <- '$y_{ijk} = \\mu + \\alpha_i + \beta_j + \epsilon_{ijk}$'
 send_tex(tex_string)
 ```
 
-## Issues
+## Issues & Feedback
 
-Please create an issue within this repository if you have any difficulty or error using the package.
+Please create an issue within this repository if you have any difficulty or error using the package. 
+
+If you have suggestions, feedback, or raving reviews you would like to share, come talk to us [on Discord!](https://discord.gg/SAHPhZn)
