@@ -2,7 +2,8 @@
 # discordr
 
 <!-- badges: start -->
-<img src='https://api.travis-ci.org/EriqLaplus/discordr.svg?branch=master'>
+[![Travis build status](https://travis-ci.org/EriqLaplus/discordr.svg?branch=master)](https://travis-ci.org/EriqLaplus/discordr)
+[![Codecov test coverage](https://codecov.io/gh/EriqLaplus/discordr/branch/master/graph/badge.svg)](https://codecov.io/gh/EriqLaplus/discordr?branch=master)
 <!-- badges: end -->
 
 The goal of discordr is to make collaborating in Discord easier through a set of utility functions.
