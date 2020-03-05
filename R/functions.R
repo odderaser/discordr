@@ -194,6 +194,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 #' @seealso
 #' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
+  res <- NULL
 
   if(file.exists(filename)){
     body_data <- list(content = httr::upload_file(filename),
@@ -208,6 +209,8 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
   else {
     stop("File not found.")
   }
+
+  invisible(res)
 }
 
 #' Send Current Plot

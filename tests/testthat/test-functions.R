@@ -43,3 +43,24 @@ test_that("204 response for sent messages", {
   response <- send_message('testing...')
   expect_equal(response$status_code, 204)
 })
+
+context("Send File")
+
+test_that("stop function if file does not exist", {
+  expect_error(send_file('does_not_exist.abc'), regexp = 'File not found.')
+})
+
+test_that("204 response for sent files", {
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
+
+  # create example file
+  filename <- tempfile(pattern = 'discordr')
+  write.csv(x = rnorm(5), file = filename)
+
+  response <- send_file(filename)
+  expect_equal(response$status_code, 200)
+
+  # remove example file
+  file.remove(filename)
+})
