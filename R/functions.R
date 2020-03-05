@@ -160,6 +160,8 @@ discordr_setup <- function(){
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
+  res <- NULL
+
   if(nchar(message) > 0){
     body_data <- list(content = message,
                       username = username)
@@ -167,6 +169,9 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = "json")
+  }
+  else {
+    message('Empty message provided.')
   }
 
   invisible(res)
