@@ -2,6 +2,7 @@
 # discordr
 
 <!-- badges: start -->
+<img src='https://api.travis-ci.org/EriqLaplus/discordr.svg?branch=master'>
 <!-- badges: end -->
 
 The goal of discordr is to make collaborating in Discord easier through a set of utility functions.
