@@ -50,7 +50,7 @@ test_that("stop function if file does not exist", {
   expect_error(send_file('does_not_exist.abc'), regexp = 'File not found.')
 })
 
-test_that("204 response for sent files", {
+test_that("200 response for sent files", {
   set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
   set_discordr_username('Travis CI')
 
