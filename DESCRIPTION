@@ -17,4 +17,5 @@ Imports:
     httr,
     stringr
 Suggests:
-    texPreview
+    texPreview,
+    testthat (>= 2.1.0)
