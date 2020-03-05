@@ -7,7 +7,8 @@
 send_console(
   ...,
   username = get_discordr_username(),
-  webhook = get_discordr_webhook()
+  webhook = get_discordr_webhook(),
+  filename = tempfile(pattern = "discordr")
 )
 }
 \arguments{
