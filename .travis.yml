@@ -4,9 +4,17 @@ language: R
 cache: packages
 
 before_install:
-   sudo add-apt-repository -y ppa:cran/imagemagick
-   sudo apt-get update
-   sudo apt-get install -y libmagick++-dev
+   - sudo add-apt-repository -y ppa:cran/imagemagick
+   - sudo apt-get update
+   - sudo apt-get install -y libmagick++-dev
 
 after_success:
   - Rscript -e 'covr::codecov()'
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh success $DISCORD_WEBHOOK_URL
+
+after_failure:
+  - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
+  - chmod +x send.sh
+  - ./send.sh failure $DISCORD_WEBHOOK_URL
