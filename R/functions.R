@@ -248,7 +248,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 
   image_dimensions <- grDevices::dev.size("px")
 
-  grDevices::dev.copy(png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
+  grDevices::dev.copy(grDevices::png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
   grDevices::dev.off()
 
   if(file.exists(filename)){

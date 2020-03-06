@@ -75,7 +75,7 @@ test_that("200 response for sent plots", {
   filename = tempfile(pattern = 'discordr', fileext = '.png')
 
   # Manually Setup Graphics Device
-  png(filename = filename)
+  grDevices::png(filename = filename)
   plot(rnorm(5), rnorm(5))
 
   response <- send_current_plot(filename = filename)
