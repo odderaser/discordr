@@ -247,14 +247,21 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   image_dimensions <- grDevices::dev.size("px")
-  rstudioapi::savePlotAsImage(file = filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = httr::upload_file(filename),
-                    username = username)
+  grDevices::dev.copy(png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
+  grDevices::dev.off()
 
-  res <- httr::POST(url = webhook,
-                   body = body_data,
-                   encode = "multipart")
+  if(file.exists(filename)){
+    body_data <- list(content = httr::upload_file(filename),
+                      username = username)
+
+    res <- httr::POST(url = webhook,
+                     body = body_data,
+                     encode = "multipart")
+  }
+  else {
+    stop('No plots found.')
+  }
 
   invisible(res)
 }
@@ -278,13 +285,12 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #' @seealso
 #' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
-  filename
 
   if(!is.null(ggplot2::last_plot())){
     ggplot2::ggsave(filename)
   }
   else {
-    stop('No previous ggplot found.')
+    stop("No ggplots found in Plots pane.")
   }
 
   body_data <- list(content = httr::upload_file(filename),
