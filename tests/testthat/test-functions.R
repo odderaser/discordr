@@ -74,7 +74,10 @@ test_that("stop function if no plot exists", {
 test_that("200 response for sent plots", {
   filename = tempfile(pattern = 'discordr', fileext = '.png')
 
-  # Manually Setup Graphics Device
+  # Manually Setup Graphics Device; setup quartz for OSX
+  if(sys.info()[['sysname']] == 'Darwin'){
+    grDevices::quartz()
+  }
   grDevices::png(filename = filename)
   plot(rnorm(5), rnorm(5))
 
