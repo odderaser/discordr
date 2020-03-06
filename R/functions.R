@@ -248,6 +248,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 
   image_dimensions <- grDevices::dev.size("px")
 
+<<<<<<< HEAD
   grDevices::dev.copy(png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
   grDevices::dev.off()
 
@@ -255,12 +256,22 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
     body_data <- list(content = httr::upload_file(filename),
                       username = username)
 
+=======
+  if(file.exists(filename)){
+    body_data <- list(content = httr::upload_file(filename),
+                      username = username)
+
+>>>>>>> 6aafef80bd2ca5af55fb90cc64487515f1a75271
     res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = "multipart")
   }
   else {
+<<<<<<< HEAD
     stop('No plots found.')
+=======
+    stop('No plots found in Plots pane.')
+>>>>>>> 6aafef80bd2ca5af55fb90cc64487515f1a75271
   }
 
   invisible(res)

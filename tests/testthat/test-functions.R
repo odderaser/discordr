@@ -97,3 +97,7 @@ test_that("200 response for sent plots", {
   response <- send_current_ggplot()
   expect_equal(response$status_code, 200)
 })
+
+context('Send R Object')
+
+
