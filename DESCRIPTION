@@ -17,7 +17,8 @@ Imports:
     httr,
     stringr,
     rstudioapi,
-    texPreview
+    texPreview,
+    dplyr
 Suggests:
     testthat (>= 2.1.0),
     covr
