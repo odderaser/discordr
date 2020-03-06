@@ -7,14 +7,16 @@
 set_discordr_webhook(webhook_address)
 }
 \arguments{
-\item{webhook_address}{}
+\item{webhook_address}{HTML Web Address from a Discord Server}
 }
 \value{
-
+None
 }
 \description{
 Sets a default webhook to be used for discord communication. Use \code{\link{set_discordr_webhook}} to check currently set default webhook.
 }
 \examples{
+\dontrun{
 set_discordr_webhook("https://discord.com/etc")
+}
 }

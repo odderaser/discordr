@@ -7,11 +7,13 @@
 get_discordr_webhook()
 }
 \value{
-webhook_address
+Currently set webhook address environment variable; Will return an empty string and message if no webhook address is set
 }
 \description{
 Obtains the currently set default username or returns an error if it not set within the current environment. If a default webhook is not set, Use \code{\link{set_discordr_webhook}} to set default environment webhook.
 }
 \examples{
+\dontrun{
 get_discordr_webhook()
+}
 }

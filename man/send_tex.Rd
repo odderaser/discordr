@@ -24,7 +24,7 @@ send_tex(
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
 }
 \value{
-
+None
 }
 \description{
 In order to use this function, you will need to install the texPreview package manually.

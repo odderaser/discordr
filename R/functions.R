@@ -4,11 +4,13 @@
 #'
 #' @param username Username to be used as default discord name
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_discordr_username("dataman")
+#' }
 set_discordr_username <- function(username){
   existing_username <- get_discordr_username()
   if(nchar(existing_username) > 0 && existing_username != username){
@@ -21,11 +23,13 @@ set_discordr_username <- function(username){
 #'
 #' Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_discordr_username}} to set default environment username.
 #'
-#' @return
+#' @return Currently set discordr username environment variable; Will return an empty string and message if no username has been set.
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' get_discordr_username()
+#' }
 get_discordr_username <- function(){
   username <- Sys.getenv("DISCORDR_USERNAME")
   if(nchar(username) == 0){
@@ -38,13 +42,15 @@ get_discordr_username <- function(){
 #'
 #' Sets a default webhook to be used for discord communication. Use \code{\link{set_discordr_webhook}} to check currently set default webhook.
 #'
-#' @param webhook_address
+#' @param webhook_address HTML Web Address from a Discord Server
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' set_discordr_webhook("https://discord.com/etc")
+#' }
 set_discordr_webhook <- function(webhook_address){
   existing_webhook <- get_discordr_webhook()
   if(nchar(existing_webhook) > 1 && existing_webhook != webhook_address){
@@ -57,11 +63,13 @@ set_discordr_webhook <- function(webhook_address){
 #'
 #' Obtains the currently set default username or returns an error if it not set within the current environment. If a default webhook is not set, Use \code{\link{set_discordr_webhook}} to set default environment webhook.
 #'
-#' @return webhook_address
+#' @return Currently set webhook address environment variable; Will return an empty string and message if no webhook address is set
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' get_discordr_webhook()
+#' }
 get_discordr_webhook <- function(){
   webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
   if(nchar(webhook_address) == 0){
@@ -74,13 +82,17 @@ get_discordr_webhook <- function(){
 #'
 #' Walks the user through checking if an existing configuration exists, changing an existing configuration, or setting up a new configuration.
 #'
-#' @return
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' discordr_setup()
+#' }
+#' @importFrom utils menu
 discordr_setup <- function(){
-  nice_print <- function(x = '') paste(x, '\n') %>% cat()
+  nice_print <- function(x = ''){
+    cat(paste(x, '\n'))
+  }
 
   nice_print('Welcome to discordr!')
   nice_print('Would you like to setup a new configuration or check for an existing one?')
@@ -153,12 +165,12 @@ discordr_setup <- function(){
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' send_message("Hello World!")
-#' send_message("Hello World!", username = "dataman")
-#' send_message("Hello World!", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
-#' send_message("Hello World!", username = "dataman", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
+#' }
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
+#' @importFrom httr POST
 send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
   res <- NULL
 
@@ -166,7 +178,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     body_data <- list(content = message,
                       username = username)
 
-    res <- httr::POST(url = webhook,
+    res <- POST(url = webhook,
                      body = body_data,
                      encode = "json")
   }
@@ -185,22 +197,24 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' send_file('image.jpg')
-#'
+#' }
 #' @seealso
 #' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
+#' @importFrom httr POST upload_file
 send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
   res <- NULL
 
   if(file.exists(filename)){
-    body_data <- list(content = httr::upload_file(filename),
+    body_data <- list(content = upload_file(filename),
                       username = username)
 
-    res <- httr::POST(url = webhook,
+    res <- POST(url = webhook,
                      body = body_data,
                      encode = 'multipart')
 
@@ -223,23 +237,26 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' send_current_plot()
-#'
+#' }
 #' @seealso
 #' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
+#' @importFrom grDevices dev.size
+#' @importFrom httr POST upload_file
 send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
-  image_dimensions <- grDevices::dev.size("px")
+  image_dimensions <- dev.size("px")
   rstudioapi::savePlotAsImage(file = filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = httr::upload_file(filename),
+  body_data <- list(content = upload_file(filename),
                     username = username)
 
-  res <- httr::POST(url = webhook,
+  res <- POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
@@ -255,32 +272,35 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' send_current_ggplot()
-#'
+#' }
 #' @seealso
 #' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
+#' @importFrom ggplot2 ggsave last_plot
+#' @importFrom httr POST upload_file
 send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
   filename
 
   if(!is.null(last_plot())){
-    ggplot2::ggsave(filename)
+    ggsave(filename)
   }
   else {
     stop('No previous ggplot found.')
   }
 
-  body_data <- list(content = httr::upload_file(filename),
+  body_data <- list(content = upload_file(filename),
                     username = username)
 
-  res <- httr::POST(url = webhook,
+  res <- POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
-  invisble(res)
+  invisible(res)
 }
 
 #' Send Console Output
@@ -290,14 +310,18 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
 #' @param ... A single or set of expressions to be evaluated for console output
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param filename Optional - Save console output to a file, defaults to a temporary file
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' send_console(2 + 2)
-#' #' @seealso
+#' }
+#' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+#' @importFrom stringr str_split
 send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr')){
 
   sink(file = filename, split = TRUE)
@@ -325,7 +349,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
   # name variables better
 
   if(file.info(filename)$size > 1990){
-    console_output_split <- unlist(stringr::str_split(console_output, '\n'))
+    console_output_split <- unlist(str_split(console_output, '\n'))
     current_console_output_split <- console_output_split[1]
     temp_total <- nchar(current_console_output_split) + 2
     for(console_output_substr in console_output_split[2:length(console_output_split)]){
@@ -357,13 +381,15 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' x <- c(1,2,3,4,5)
 #' y <- matrix(rep(0, 4), rows = 2, cols = 2)
 #' send_robject(x, y, filename = 'test_data.RData')
+#' }
 send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
 
   save(..., file = filename)
@@ -382,19 +408,22 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 #' @param username Username to use for sender of message, defaults to environment set username
 #' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
 #'
-#' @return
+#' @return None
 #' @export
 #'
 #' @examples
 send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, username = get_discordr_username(), webhook = get_discordr_webhook()){
 
+  res <- NULL
+
   if (!requireNamespace("texPreview", quietly = TRUE)){
-    stop("Package \"texPreview\" needed for this function to work. Please install it.",
-         call. = FALSE)
+    stop("Package \"texPreview\" needed for this function to work. Please install it.", call. = FALSE)
+  }
+  else {
+    TexPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
+    res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
   }
 
-  texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
 
-  res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
   invisible(res)
 }

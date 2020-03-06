@@ -21,13 +21,15 @@ send_robject(
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
 }
 \value{
-
+None
 }
 \description{
 Send R Objects
 }
 \examples{
+\dontrun{
 x <- c(1,2,3,4,5)
 y <- matrix(rep(0, 4), rows = 2, cols = 2)
 send_robject(x, y, filename = 'test_data.RData')
+}
 }

@@ -18,15 +18,16 @@ send_current_ggplot(
 \item{filename}{Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename}
 }
 \value{
-
+None
 }
 \description{
 This function works identical to \code{\link{send_current_plot}} except that it appears to provide a higher resolution and only work for plots
 constructed using a ggplot workflow.
 }
 \examples{
+\dontrun{
 send_current_ggplot()
-
+}
 }
 \seealso{
 \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}

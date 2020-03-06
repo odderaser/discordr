@@ -17,15 +17,20 @@ send_console(
 \item{username}{Username to use for sender of message, defaults to environment set username}
 
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
+
+\item{filename}{Optional - Save console output to a file, defaults to a temporary file}
 }
 \value{
-
+None
 }
 \description{
 This functions accepts an expression whose console output you would like to send to the specified discord channel
 }
 \examples{
+\dontrun{
 send_console(2 + 2)
-#' @seealso
+}
+}
+\seealso{
 \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
 }

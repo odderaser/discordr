@@ -6,12 +6,11 @@
 \usage{
 discordr_setup()
 }
-\value{
-
-}
 \description{
 Walks the user through checking if an existing configuration exists, changing an existing configuration, or setting up a new configuration.
 }
 \examples{
+\dontrun{
 discordr_setup()
+}
 }

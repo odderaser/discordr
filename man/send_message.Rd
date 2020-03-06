@@ -24,10 +24,9 @@ None
 Sends a message using the username provided to the channel of the webhook provided
 }
 \examples{
+\dontrun{
 send_message("Hello World!")
-send_message("Hello World!", username = "dataman")
-send_message("Hello World!", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
-send_message("Hello World!", username = "dataman", webhook = "https://discordapp.com/api/webhooks/<your-webhook-here>")
+}
 
 }
 \seealso{

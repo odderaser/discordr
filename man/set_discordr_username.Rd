@@ -10,11 +10,13 @@ set_discordr_username(username)
 \item{username}{Username to be used as default discord name}
 }
 \value{
-
+None
 }
 \description{
 Sets a default username to be used for discord communication. Use \code{\link{get_discordr_username}} to check currently set default username.
 }
 \examples{
+\dontrun{
 set_discordr_username("dataman")
+}
 }

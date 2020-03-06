@@ -18,14 +18,15 @@ send_file(
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
 }
 \value{
-
+None
 }
 \description{
 Send file from the given filename to the username and webhook provided
 }
 \examples{
+\dontrun{
 send_file('image.jpg')
-
+}
 }
 \seealso{
 \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}

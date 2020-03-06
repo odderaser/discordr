@@ -18,7 +18,7 @@ send_current_plot(
 \item{filename}{Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename}
 }
 \value{
-
+None
 }
 \description{
 Sends the last plot displayed within the plots tab in RStudio. This function will display both ggplot and base graphics
@@ -26,8 +26,9 @@ with a lower resolution than only ggplot graphics. In order to save and send the
 be generated and saved temporarily.
 }
 \examples{
+\dontrun{
 send_current_plot()
-
+}
 }
 \seealso{
 \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}

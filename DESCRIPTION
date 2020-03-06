@@ -15,7 +15,8 @@ RoxygenNote: 7.0.2
 Imports:
     ggplot2,
     httr,
-    stringr
+    stringr,
+    rstudioapi
 Suggests:
     texPreview,
     testthat (>= 2.1.0),
