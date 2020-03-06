@@ -75,7 +75,7 @@ test_that("200 response for sent plots", {
   filename = tempfile(pattern = 'discordr', fileext = '.png')
 
   # Manually Setup Graphics Device; setup quartz for OSX
-  if(sys.info()[['sysname']] == 'Darwin'){
+  if(Sys.info()[['sysname']] == 'Darwin'){
     grDevices::quartz()
   }
   grDevices::png(filename = filename)
