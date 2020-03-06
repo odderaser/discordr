@@ -170,7 +170,6 @@ discordr_setup <- function(){
 #' }
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-#' @importFrom httr POST
 send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
   res <- NULL
 
@@ -178,7 +177,7 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
     body_data <- list(content = message,
                       username = username)
 
-    res <- POST(url = webhook,
+    res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = "json")
   }
@@ -206,15 +205,14 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 #' }
 #' @seealso
 #' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-#' @importFrom httr POST upload_file
 send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
   res <- NULL
 
   if(file.exists(filename)){
-    body_data <- list(content = upload_file(filename),
+    body_data <- list(content = httr::upload_file(filename),
                       username = username)
 
-    res <- POST(url = webhook,
+    res <- httr::POST(url = webhook,
                      body = body_data,
                      encode = 'multipart')
 
@@ -246,17 +244,15 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #' }
 #' @seealso
 #' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-#' @importFrom grDevices dev.size
-#' @importFrom httr POST upload_file
 send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
-  image_dimensions <- dev.size("px")
+  image_dimensions <- grDevices::dev.size("px")
   rstudioapi::savePlotAsImage(file = filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = upload_file(filename),
+  body_data <- list(content = httr::upload_file(filename),
                     username = username)
 
-  res <- POST(url = webhook,
+  res <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
@@ -281,22 +277,20 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #' }
 #' @seealso
 #' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-#' @importFrom ggplot2 ggsave last_plot
-#' @importFrom httr POST upload_file
 send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
   filename
 
-  if(!is.null(last_plot())){
-    ggsave(filename)
+  if(!is.null(ggplot2::last_plot())){
+    ggplot2::ggsave(filename)
   }
   else {
     stop('No previous ggplot found.')
   }
 
-  body_data <- list(content = upload_file(filename),
+  body_data <- list(content = httr::upload_file(filename),
                     username = username)
 
-  res <- POST(url = webhook,
+  res <- httr::POST(url = webhook,
                    body = body_data,
                    encode = "multipart")
 
@@ -321,7 +315,6 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
 #' }
 #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
-#' @importFrom stringr str_split
 send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr')){
 
   sink(file = filename, split = TRUE)
@@ -349,7 +342,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
   # name variables better
 
   if(file.info(filename)$size > 1990){
-    console_output_split <- unlist(str_split(console_output, '\n'))
+    console_output_split <- unlist(stringr::str_split(console_output, '\n'))
     current_console_output_split <- console_output_split[1]
     temp_total <- nchar(current_console_output_split) + 2
     for(console_output_substr in console_output_split[2:length(console_output_split)]){
@@ -394,7 +387,7 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 
   save(..., file = filename)
 
-  res <-send_file(filename, username = username, webhook = webhook)
+  res <- send_file(filename, username = username, webhook = webhook)
   invisible(res)
 }
 
@@ -420,10 +413,9 @@ send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), dens
     stop("Package \"texPreview\" needed for this function to work. Please install it.", call. = FALSE)
   }
   else {
-    TexPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
+    texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
     res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
   }
-
 
   invisible(res)
 }
