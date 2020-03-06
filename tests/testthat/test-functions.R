@@ -64,3 +64,36 @@ test_that("200 response for sent files", {
   # remove example file
   file.remove(filename)
 })
+
+context("Send Image (Base Graphics)")
+
+test_that("stop function if no plot exists", {
+  expect_error(send_current_plot(), regexp = "No plots found.")
+})
+
+test_that("200 response for sent plots", {
+  filename = tempfile(pattern = 'discordr', fileext = '.png')
+
+  # Manually Setup Graphics Device
+  png(filename = filename)
+  plot(rnorm(5), rnorm(5))
+
+  response <- send_current_plot(filename = filename)
+  expect_equal(response$status_code, 200)
+
+  # Remove files
+  file.remove(filename)
+  file.remove('Rplots.pdf')
+})
+
+context("Send Image (ggplot2 Graphics)")
+
+test_that("stop function if no plot exists", {
+  expect_error(send_current_ggplot(), regexp = "No ggplots found in Plots pane.")
+})
+
+test_that("200 response for sent plots", {
+  ggplot2::ggplot(data = dplyr::tibble(x = rnorm(5), y = rnorm(5)), ggplot2::aes(x = x, y = y)) + ggplot2::geom_point()
+  response <- send_current_ggplot()
+  expect_equal(response$status_code, 200)
+})

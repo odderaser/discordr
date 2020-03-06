@@ -249,12 +249,17 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
   image_dimensions <- grDevices::dev.size("px")
   rstudioapi::savePlotAsImage(file = filename, width = image_dimensions[1], height = image_dimensions[2])
 
-  body_data <- list(content = httr::upload_file(filename),
-                    username = username)
+  if(file.exists(filename)){
+    body_data <- list(content = httr::upload_file(filename),
+                      username = username)
 
-  res <- httr::POST(url = webhook,
-                   body = body_data,
-                   encode = "multipart")
+    res <- httr::POST(url = webhook,
+                     body = body_data,
+                     encode = "multipart")
+  }
+  else {
+    stop('No plots found in Plots pane.')
+  }
 
   invisible(res)
 }
@@ -284,7 +289,7 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
     ggplot2::ggsave(filename)
   }
   else {
-    stop('No previous ggplot found.')
+    stop("No ggplots found in Plots pane.")
   }
 
   body_data <- list(content = httr::upload_file(filename),
