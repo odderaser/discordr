@@ -322,55 +322,83 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
 #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
 send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr')){
+  res <- NULL
 
-  sink(file = filename, split = TRUE)
-
-  # code heavily inspired by capture.output
-  pf = parent.frame()
-  args <- substitute(list(...))[-1L]
-  evalVis <- function(expr) withVisible(eval(expr, pf))
-  for(i in 1:seq_along(args)){
-    expr <- args[[1]]
-    tmp <- switch(mode(expr), expression = lapply(expr, evalVis), call = , name = list(evalVis(expr)), stop("bad argument"))
-    for (item in tmp) if (item$visible)
-      print(item$value)
-  }
-
-  sink()
-
-  console_output <- readChar(filename, file.info(filename)$size)
-
-  ### Clean up this code
-  # Create easy function for padding message with code quotes, maybe in send_message?
-  # Streamline loop process by removing initialization,
-  # move check for empty string to else case,
-  # remove subsetting in forloop
-  # name variables better
-
-  if(file.info(filename)$size > 1990){
-    console_output_split <- unlist(stringr::str_split(console_output, '\n'))
-    current_console_output_split <- console_output_split[1]
-    temp_total <- nchar(current_console_output_split) + 2
-    for(console_output_substr in console_output_split[2:length(console_output_split)]){
-      if(temp_total + nchar(console_output_substr) > 1990){
-        current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
-        send_message(current_console_output_split, username = username, webhook = webhook)
-
-        current_console_output_split <- console_output_substr
-        temp_total <- nchar(console_output_substr) + 2
-      }
-      else {
-        temp_total <- temp_total + nchar(console_output_substr) + 2
-        current_console_output_split <- paste(current_console_output_split, console_output_substr, sep = '\n')
-      }
-    }
-    current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
-    send_message(current_console_output_split, username = username, webhook = webhook)
+  if(length(list(...)) == 0){
+    message('No calls provided.')
   }
   else {
-    console_output <- paste('```', console_output, '```', sep = '\n')
-    send_message(console_output, username = username, webhook = webhook)
+
+    sink(file = filename, split = TRUE)
+
+    # code heavily inspired by capture.output
+    pf = parent.frame()
+    args <- substitute(list(...))[-1L]
+    evalVis <- function(expr) withVisible(eval(expr, pf))
+    for(i in 1:seq_along(args)){
+      expr <- args[[1]]
+      tmp <- switch(mode(expr),
+                    expression = lapply(expr, evalVis),
+                    call = ,
+                    name = list(evalVis(expr)),
+                    numeric = list(evalVis(expr)),
+                    stop("bad argument"))
+      for (item in tmp) if (item$visible)
+        print(item$value)
+    }
+
+    sink()
+
+    if(file.info(filename)$size == 0){
+      message('No console output from provided functions.')
+    }
+    else {
+
+    console_output <- readChar(filename, file.info(filename)$size)
+    res <- c()
+
+    ### Clean up this code
+    # Create easy function for padding message with code quotes, maybe in send_message?
+    # Streamline loop process by removing initialization,
+    # move check for empty string to else case,
+    # remove subsetting in forloop
+    # name variables better
+
+      if(file.info(filename)$size > 1990){
+        console_output_split <- unlist(stringr::str_split(console_output, '\n'))
+        current_console_output_split <- console_output_split[1]
+        temp_total <- nchar(current_console_output_split) + 2
+        for(console_output_substr in console_output_split[2:length(console_output_split)]){
+          if(temp_total + nchar(console_output_substr) > 1990){
+            current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
+            send_message(current_console_output_split, username = username, webhook = webhook)
+
+            current_console_output_split <- console_output_substr
+            temp_total <- nchar(console_output_substr) + 2
+          }
+          else {
+            temp_total <- temp_total + nchar(console_output_substr) + 2
+            current_console_output_split <- paste(current_console_output_split, console_output_substr, sep = '\n')
+          }
+        }
+        current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
+        temp_res <- send_message(current_console_output_split, username = username, webhook = webhook)
+        res <- c(res, temp_res)
+
+        #avoid 429 status codes
+        Sys.sleep(0.5)
+      }
+      else {
+        console_output <- paste('```', console_output, '```', sep = '\n')
+        temp_res <- send_message(console_output, username = username, webhook = webhook)
+        res <- c(res, temp_res)
+
+        #avoid 429 status codes
+        Sys.sleep(0.5)
+      }
+    }
   }
+  invisible(res)
 }
 
 #' Send R Objects
@@ -390,10 +418,16 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 #' send_robject(x, y, filename = 'test_data.RData')
 #' }
 send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
+  res <- NULL
 
-  save(..., file = filename)
+  if(length(list(...)) > 0){
+    save(..., file = filename)
+    res <- send_file(filename, username = username, webhook = webhook)
+  }
+  else {
+    message('No objects provided.')
+  }
 
-  res <- send_file(filename, username = username, webhook = webhook)
   invisible(res)
 }
 

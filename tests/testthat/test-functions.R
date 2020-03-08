@@ -101,6 +101,53 @@ test_that("200 response for sent plots", {
   expect_equal(response$status_code, 200)
 })
 
+context('Send Console Output')
+
+test_that("stop function if no calls provided.", {
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
+
+  expect_message(send_console(), 'No calls provided.')
+})
+
+test_that("stop function if no console output provided", {
+
+  expect_message(send_console(invisible()), 'No console output from provided functions.')
+})
+
+test_that("200 response for console output", {
+  # Basic response
+  response <- send_console(5 + 5)
+  expect_equal(response$status_code, 204)
+
+  # 2000+ character output
+  options(max.print = 5000)
+  response_list <- send_console(paste(replicate(2000, "a"), collapse = ""))
+  #expect_equal(length(response_list), 4)
+  print(length(response_list))
+
+  options(max.print = 1000)
+
+})
+
 context('Send R Object')
 
+test_that("stop function if no objects provided",{
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
 
+  response <- expect_message(send_robject(), 'No objects provided.')
+  expect_null(response)
+})
+
+test_that("200 response for sent Rdata file", {
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
+
+  x <<- c(1,2,3,4,5)
+  y <<- matrix(rep(0, 20), nrow = 4)
+  z <<- dplyr::tibble(a = c(1,2,3,4,5), b = c(1,2,3,4,5))
+
+  response <- send_robject(x, y, z)
+  expect_equal(response$status_code, 200)
+})
