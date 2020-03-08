@@ -78,7 +78,7 @@ test_that("200 response for sent plots", {
   # if(Sys.info()[['sysname']] == 'Darwin'){
   #   grDevices::quartz()
   # }
-  print(Sys.info())
+  print(dev.list())
 
   grDevices::png(filename = filename)
   plot(rnorm(5), rnorm(5))
