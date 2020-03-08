@@ -5,9 +5,11 @@ Authors@R:
     person(given = "Jordan",
            family = "Love",
            role = c("aut", "cre"),
-           email = "jordan@notunlikely.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Discordr creates a set of utility function for sending content from R or RStudio to Discord via Discord's easy-to-use webhook architecture. 
+           email = "jordan@notunlikely.com")
+Description: Discordr creates a set of utility function for sending content from R or RStudio to Discord 
+             via Discord's easy-to-use webhook architecture. The contained functions enable sharing of 
+             console output, compiled Tex code, plots (base graphics and ggplot2), and RData files 
+             with collaborators.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
