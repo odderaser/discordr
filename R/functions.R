@@ -431,17 +431,13 @@ send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), dens
 
   res <- NULL
 
-  if (!requireNamespace("texPreview", quietly = TRUE)){
-    stop("Package \"texPreview\" needed for this function to work. Please install it.", call. = FALSE)
+  if(nchar(tex_string) == 0){
+    message("No tex string provided.")
   }
   else {
-    if(nchar(tex_string) == 0){
-      message("No tex string provided.")
-    }
-    else {
-      texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
-      res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
-    }
+    texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
+    res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
   }
+
   invisible(res)
 }
