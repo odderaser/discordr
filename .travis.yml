@@ -12,7 +12,7 @@ before_install:
    - if [ "$TRAVIS_OS_NAME" = "linux"]; then sudo apt-get install -y libmagick++-dev; fi
 
 after_success:
-  - Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov(function_exclusions = c("discordr_setup"))'
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh success $DISCORD_WEBHOOK_URL
