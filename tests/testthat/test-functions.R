@@ -74,16 +74,11 @@ test_that("stop function if no plot exists", {
 test_that("200 response for sent plots", {
   filename = tempfile(pattern = 'discordr', fileext = '.png')
 
-  #Manually Setup Graphics Device; setup quartz for OSX
-  if(Sys.info()[['sysname']] == 'Darwin'){
-    grDevices::quartz()
-  }
-  else {
-    grDevices::png(filename = filename)
-  }
-
+  print(dev.list())
+  grDevices::png(filename = filename)
+  print(dev.list())
   plot(rnorm(5), rnorm(5))
-
+  print(dev.list())
   response <- send_current_plot(filename = filename)
   expect_equal(response$status_code, 200)
 
