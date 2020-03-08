@@ -37,7 +37,7 @@ test_that("empty strings do not get sent", {
 })
 
 test_that("204 response for sent messages", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   response <- send_message('testing...')
@@ -51,7 +51,7 @@ test_that("stop function if file does not exist", {
 })
 
 test_that("200 response for sent files", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   # create example file
@@ -104,7 +104,7 @@ test_that("200 response for sent plots", {
 context('Send Console Output')
 
 test_that("stop function if no calls provided.", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   expect_message(send_console(), 'No calls provided.')
@@ -141,7 +141,7 @@ test_that("204 response for console output", {
 context('Send R Object')
 
 test_that("stop function if no objects provided",{
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   response <- expect_message(send_robject(), 'No objects provided.')
@@ -149,7 +149,7 @@ test_that("stop function if no objects provided",{
 })
 
 test_that("200 response for sent Rdata file", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   x <<- c(1,2,3,4,5)
@@ -163,14 +163,14 @@ test_that("200 response for sent Rdata file", {
 context('Send Tex Image')
 
 test_that("stop function if no tex string provided", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   expect_message(send_tex(""))
 })
 
 test_that("200 response for sent tex image", {
-  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
   tex_string <- "$\\int^a_b \\frac{1}{3}x^3 dx$"

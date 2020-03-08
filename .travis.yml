@@ -13,6 +13,7 @@ before_install:
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libmagick++-dev; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install ghostscript; fi
+   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo ln -s /usr/local/bin/gs /usr/bin/gs; fi
 
 after_success:
   - Rscript -e 'covr::codecov(function_exclusions = c("discordr_setup"))'
