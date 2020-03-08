@@ -8,12 +8,12 @@ os:
    - osx
 
 before_install:
-   - sudo tlmgr install index
-   - sudo tlmgr install standalone
+   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then tlmgr install standalone; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo add-apt-repository -y ppa:cran/imagemagick; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get update; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libmagick++-dev; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install ghostscript; fi
+   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo tlmgr install standalone; fi
    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo brew update; fi
    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo brew install imagemagick; fi
 
