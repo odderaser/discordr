@@ -125,8 +125,6 @@ test_that("204 response for console output", {
   response_list <- send_console(paste(replicate(2000, "a"), collapse = ""))
   options(max.print = 1000)
 
-  print(response_list)
-
   # two responses expected
   expect_equal(length(response_list), 2)
 
@@ -159,5 +157,24 @@ test_that("200 response for sent Rdata file", {
   z <<- dplyr::tibble(a = c(1,2,3,4,5), b = c(1,2,3,4,5))
 
   response <- send_robject(x, y, z)
+  expect_equal(response$status_code, 200)
+})
+
+context('Send Tex Image')
+
+test_that("stop function if no tex string provided", {
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
+
+  expect_message(send_tex(""))
+})
+
+test_that("200 response for sent tex image", {
+  set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
+  set_discordr_username('Travis CI')
+
+  tex_string <- "\\begin{align*} f(x) &= x^2\\\\ g(x) &= \\frac{1}{x}\\\\ F(x) &= \\int^a_b \\frac{1}{3}x^3 \\end{align*}"
+
+  response <- send_tex(tex_string)
   expect_equal(response$status_code, 200)
 })
