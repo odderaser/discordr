@@ -37,8 +37,6 @@ test_that("empty strings do not get sent", {
 })
 
 test_that("204 response for sent messages", {
-  print('!+!+!+!+!+!+!+!+ WEBHOOK +!+!+!+!+!+!+!+!')
-  print(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
   set_discordr_username('Travis CI')
 
