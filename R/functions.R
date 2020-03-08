@@ -23,6 +23,8 @@ set_discordr_username <- function(username){
 #'
 #' Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_discordr_username}} to set default environment username.
 #'
+#' @param verbose Return detailed messages on if username is currently set.
+#'
 #' @return Currently set discordr username environment variable; Will return an empty string and message if no username has been set.
 #' @export
 #'
@@ -62,6 +64,8 @@ set_discordr_webhook <- function(webhook_address){
 #' Get Default Discordr Webhook
 #'
 #' Obtains the currently set default username or returns an error if it not set within the current environment. If a default webhook is not set, Use \code{\link{set_discordr_webhook}} to set default environment webhook.
+#'
+#' @param verbose Return detailed messages on if webhook is currently set.
 #'
 #' @return Currently set webhook address environment variable; Will return an empty string and message if no webhook address is set
 #' @export

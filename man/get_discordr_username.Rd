@@ -4,7 +4,10 @@
 \alias{get_discordr_username}
 \title{Get Default Discordr Username}
 \usage{
-get_discordr_username()
+get_discordr_username(verbose = TRUE)
+}
+\arguments{
+\item{verbose}{Return detailed messages on if username is currently set.}
 }
 \value{
 Currently set discordr username environment variable; Will return an empty string and message if no username has been set.

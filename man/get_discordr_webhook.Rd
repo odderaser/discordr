@@ -4,7 +4,10 @@
 \alias{get_discordr_webhook}
 \title{Get Default Discordr Webhook}
 \usage{
-get_discordr_webhook()
+get_discordr_webhook(verbose = TRUE)
+}
+\arguments{
+\item{verbose}{Return detailed messages on if webhook is currently set.}
 }
 \value{
 Currently set webhook address environment variable; Will return an empty string and message if no webhook address is set
