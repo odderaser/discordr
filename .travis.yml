@@ -5,6 +5,7 @@ cache: packages
 
 os:
    - linux
+   - osx
 
 before_install:
    - tlmgr install index
