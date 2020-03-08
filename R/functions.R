@@ -12,7 +12,7 @@
 #' set_discordr_username("dataman")
 #' }
 set_discordr_username <- function(username){
-  existing_username <- get_discordr_username()
+  existing_username <- get_discordr_username(verbose = FALSE)
   if(nchar(existing_username) > 0 && existing_username != username){
     message(paste('Overwriting existing username:', existing_username))
   }
@@ -30,9 +30,9 @@ set_discordr_username <- function(username){
 #' \dontrun{
 #' get_discordr_username()
 #' }
-get_discordr_username <- function(){
+get_discordr_username <- function(verbose = TRUE){
   username <- Sys.getenv("DISCORDR_USERNAME")
-  if(nchar(username) == 0){
+  if(nchar(username) == 0 && verbose){
     message("Default discordr username not set. Use set_discordr_username to set a default webhook as an environment variable.")
   }
   return(username)
@@ -52,7 +52,7 @@ get_discordr_username <- function(){
 #' set_discordr_webhook("https://discord.com/etc")
 #' }
 set_discordr_webhook <- function(webhook_address){
-  existing_webhook <- get_discordr_webhook()
+  existing_webhook <- get_discordr_webhook(verbose = FALSE)
   if(nchar(existing_webhook) > 1 && existing_webhook != webhook_address){
     message(paste('Overwriting existing webhook:', existing_webhook))
   }
@@ -70,9 +70,9 @@ set_discordr_webhook <- function(webhook_address){
 #' \dontrun{
 #' get_discordr_webhook()
 #' }
-get_discordr_webhook <- function(){
+get_discordr_webhook <- function(verbose = TRUE){
   webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
-  if(nchar(webhook_address) == 0){
+  if(nchar(webhook_address) == 0 && verbose){
     message("Default discordr webhook not set. Use set_discordr_webhook to set a default webhook as an environment variable.")
   }
   return(webhook_address)
