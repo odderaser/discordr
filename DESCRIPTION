@@ -1,5 +1,5 @@
 Package: discordr
-Title: Utility Functions For Sending R Output To Discord
+Title: Utility Functions for Sending R Output to Discord
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Jordan",
