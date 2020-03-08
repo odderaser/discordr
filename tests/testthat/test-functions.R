@@ -173,7 +173,7 @@ test_that("200 response for sent tex image", {
   set_discordr_webhook('https://discordapp.com/api/webhooks/685200292941267120/E0xM8Ipe7TkZiTBIeFtp289NMqjejB2q2aj50B-jbYRafaFbF0o2PsUZux0ZpizfWcKV')
   set_discordr_username('Travis CI')
 
-  tex_string <- "\\begin{align*} f(x) &= x^2\\\\ g(x) &= \\frac{1}{x}\\\\ F(x) &= \\int^a_b \\frac{1}{3}x^3 \\end{align*}"
+  tex_string <- "$\\int^a_b \\frac{1}{3}x^3 dx$"
 
   response <- send_tex(tex_string)
   expect_equal(response$status_code, 200)
