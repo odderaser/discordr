@@ -115,7 +115,7 @@ test_that("stop function if no console output provided", {
   expect_message(send_console(invisible()), 'No console output from provided functions.')
 })
 
-test_that("200 response for console output", {
+test_that("204 response for console output", {
   # Basic response
   response <- send_console(5 + 5)
   expect_equal(response$status_code, 204)
@@ -123,11 +123,21 @@ test_that("200 response for console output", {
   # 2000+ character output
   options(max.print = 5000)
   response_list <- send_console(paste(replicate(2000, "a"), collapse = ""))
-  #expect_equal(length(response_list), 4)
-  print(length(response_list))
-
   options(max.print = 1000)
 
+  print(response_list)
+
+  # two responses expected
+  expect_equal(length(response_list), 2)
+
+  # extract response status codes
+  response_status_codes <- rep(0, length(response_list))
+  for(response_index in 1:length(response_list)){
+    response_status_codes[response_index] <- response$status_code
+  }
+
+  # all status codes should be 204
+  expect_setequal(response_status_codes, rep(204, length(response_list)))
 })
 
 context('Send R Object')

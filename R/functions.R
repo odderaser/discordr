@@ -354,50 +354,28 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
     }
     else {
 
-    console_output <- readChar(filename, file.info(filename)$size)
-    res <- c()
+      console_output <- readChar(filename, file.info(filename)$size)
 
-    ### Clean up this code
-    # Create easy function for padding message with code quotes, maybe in send_message?
-    # Streamline loop process by removing initialization,
-    # move check for empty string to else case,
-    # remove subsetting in forloop
-    # name variables better
+      nchar_split <- 1500
+      if(nchar(console_output) > nchar_split){
+        split_console_output <- substring(console_output, seq(1, nchar(console_output), nchar_split), seq(nchar_split, nchar(console_output), nchar_split))
+        res <- list()
 
-      if(file.info(filename)$size > 1990){
-        console_output_split <- unlist(stringr::str_split(console_output, '\n'))
-        current_console_output_split <- console_output_split[1]
-        temp_total <- nchar(current_console_output_split) + 2
-        for(console_output_substr in console_output_split[2:length(console_output_split)]){
-          if(temp_total + nchar(console_output_substr) > 1990){
-            current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
-            send_message(current_console_output_split, username = username, webhook = webhook)
+        for(console_output_index in 1:length(split_console_output)){
+          current_console_output_split <- paste('```', split_console_output[console_output_index], '```', sep = '\n')
+          res[[console_output_index]] <- send_message(current_console_output_split, username = username, webhook = webhook)
 
-            current_console_output_split <- console_output_substr
-            temp_total <- nchar(console_output_substr) + 2
-          }
-          else {
-            temp_total <- temp_total + nchar(console_output_substr) + 2
-            current_console_output_split <- paste(current_console_output_split, console_output_substr, sep = '\n')
-          }
+          #avoid timeout errors
+          Sys.sleep(1)
         }
-        current_console_output_split <- paste('```', current_console_output_split, '```', sep = '\n')
-        temp_res <- send_message(current_console_output_split, username = username, webhook = webhook)
-        res <- c(res, temp_res)
-
-        #avoid 429 status codes
-        Sys.sleep(0.5)
       }
       else {
         console_output <- paste('```', console_output, '```', sep = '\n')
-        temp_res <- send_message(console_output, username = username, webhook = webhook)
-        res <- c(res, temp_res)
-
-        #avoid 429 status codes
-        Sys.sleep(0.5)
+        res <- send_message(console_output, username = username, webhook = webhook)
       }
     }
   }
+
   invisible(res)
 }
 
