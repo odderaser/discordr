@@ -14,8 +14,8 @@ before_install:
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -y libmagick++-dev; fi
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install ghostscript; fi
    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo tlmgr install standalone; fi
-   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo brew update; fi
-   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo brew install imagemagick; fi
+   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
+   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install imagemagick; fi
 
 after_success:
   - Rscript -e 'covr::codecov(function_exclusions = c("discordr_setup"))'
