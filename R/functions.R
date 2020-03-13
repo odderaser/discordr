@@ -1,6 +1,6 @@
 #' Set Default Discordr Username
 #'
-#' Sets a default username to be used for discord communication. Use \code{\link{get_discordr_username}} to check currently set default username.
+#' Sets a default username to be used for discord communication. Use \code{\link{get_default_discord_username}} to check currently set default username.
 #'
 #' @param username Username to be used as default discord name
 #'
@@ -9,19 +9,22 @@
 #'
 #' @examples
 #' \dontrun{
-#' set_discordr_username("dataman")
+#' set_default_discord_username("dataman")
 #' }
 set_default_discord_username <- function(username){
-  existing_username <- get_discordr_username(verbose = FALSE)
-  if(nchar(existing_username) > 0 && existing_username != username){
+  existing_username <- get_default_discord_username(verbose = FALSE)
+  if(nchar(username) == 0){
+    message("Default username is set to an empty string.")
+  }
+  else if(nchar(existing_username) > 0 && existing_username != username){
     message(paste('Overwriting existing username:', existing_username))
   }
-  Sys.setenv(DISCORDR_USERNAME = username)
+  Sys.setenv(DISCORD_USERNAME = username)
 }
 
 #' Get Default Discordr Username
 #'
-#' Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_discordr_username}} to set default environment username.
+#' Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_default_discord_username}} to set default environment username.
 #'
 #' @param verbose Return detailed messages on if username is currently set.
 #'
@@ -30,12 +33,12 @@ set_default_discord_username <- function(username){
 #'
 #' @examples
 #' \dontrun{
-#' get_discordr_username()
+#' get_default_discord_username()
 #' }
 get_default_discord_username <- function(verbose = TRUE){
-  username <- Sys.getenv("DISCORDR_USERNAME")
+  username <- Sys.getenv("DISCORD_USERNAME")
   if(nchar(username) == 0 && verbose){
-    message("Default discordr username not set. Use set_discordr_username to set a default webhook as an environment variable.")
+    message("Default discordr username not set. Use set_default_discord_username to set a default username as an environment variable.")
   }
   return(username)
 }

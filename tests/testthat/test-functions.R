@@ -1,32 +1,25 @@
-set_discordr_username('')
-set_discordr_webhook('')
+set_default_discord_username('')
 
-context("Environment Variables")
+context("Set Default Username")
 
-test_that("empty environment variable returns empty string and warning", {
-  expect_message(get_discordr_username(), 'username not set')
-  expect_equal('', get_discordr_username())
-
-  expect_message(get_discordr_webhook(), 'webhook not set')
-  expect_equal('', get_discordr_webhook())
+test_that("message and empty string when no username is set", {
+  function_result <- expect_message(get_default_discord_username(), 'username not set')
+  expect_equal('', function_result)
 })
 
-test_that("setting username and checking it exists", {
-  set_discordr_username('discordr-bot')
-  expect_equal('discordr-bot', get_discordr_username())
-
-  set_discordr_webhook('https://test.webhook/')
-  expect_equal('https://test.webhook/', get_discordr_webhook())
+test_that("setting default username and checking it exists", {
+  set_default_discord_username('discordr-bot')
+  expect_equal('discordr-bot', get_default_discord_username())
 })
 
-test_that("messages when overwriting existing environment variables", {
-  # No message on same string
-  expect_message(set_discordr_username('discordr-bot'), regexp = NA)
-  expect_message(set_discordr_webhook('https://test.webhook/'), regexp = NA)
+test_that("overwriting an existing username creates a message", {
+  expect_message(set_default_discord_username('discordr-bot2'), 'Overwriting existing username')
+  expect_equal('discordr-bot2', get_default_discord_username())
+})
 
-  # Show message on different string
-  expect_message(set_discordr_username('discordr-bot2'), 'Overwriting existing username: discordr-bot')
-  expect_message(set_discordr_webhook('https://test2.webhook/'), 'Overwriting existing webhook: https://test.webhook/')
+test_that("removing default username creates message but accepts", {
+  expect_message(set_default_discord_username(''), 'Default username is set to an empty string')
+  expect_equal('', get_default_discord_username())
 })
 
 context("Send Message")

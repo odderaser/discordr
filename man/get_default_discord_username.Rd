@@ -13,10 +13,10 @@ get_default_discord_username(verbose = TRUE)
 Currently set discordr username environment variable; Will return an empty string and message if no username has been set.
 }
 \description{
-Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_discordr_username}} to set default environment username.
+Obtains the currently set default username or returns an error if it not set within the current environment. If username is not set, use \code{\link{set_default_discord_username}} to set default environment username.
 }
 \examples{
 \dontrun{
-get_discordr_username()
+get_default_discord_username()
 }
 }
