@@ -4,11 +4,9 @@
 \alias{send_current_ggplot}
 \title{Send Current Plot (ggplot version)}
 \usage{
-send_current_ggplot(
-  username = get_discordr_username(),
-  webhook = get_discordr_webhook(),
-  filename = tempfile(pattern = "discordr", fileext = ".png")
-)
+send_current_ggplot(username = get_discordr_username(),
+  webhook = get_discordr_webhook(), filename = tempfile(pattern =
+  "discordr", fileext = ".png"))
 }
 \arguments{
 \item{username}{Username to use for sender of message, defaults to environment set username}

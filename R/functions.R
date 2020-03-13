@@ -11,7 +11,7 @@
 #' \dontrun{
 #' set_discordr_username("dataman")
 #' }
-set_discordr_username <- function(username){
+set_default_discord_username <- function(username){
   existing_username <- get_discordr_username(verbose = FALSE)
   if(nchar(existing_username) > 0 && existing_username != username){
     message(paste('Overwriting existing username:', existing_username))
@@ -32,54 +32,12 @@ set_discordr_username <- function(username){
 #' \dontrun{
 #' get_discordr_username()
 #' }
-get_discordr_username <- function(verbose = TRUE){
+get_default_discord_username <- function(verbose = TRUE){
   username <- Sys.getenv("DISCORDR_USERNAME")
   if(nchar(username) == 0 && verbose){
     message("Default discordr username not set. Use set_discordr_username to set a default webhook as an environment variable.")
   }
   return(username)
-}
-
-#' Set Default Discordr Webhook
-#'
-#' Sets a default webhook to be used for discord communication. Use \code{\link{set_discordr_webhook}} to check currently set default webhook.
-#'
-#' @param webhook_address HTML Web Address from a Discord Server
-#'
-#' @return None
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' set_discordr_webhook("https://discord.com/etc")
-#' }
-set_discordr_webhook <- function(webhook_address){
-  existing_webhook <- get_discordr_webhook(verbose = FALSE)
-  if(nchar(existing_webhook) > 1 && existing_webhook != webhook_address){
-    message(paste('Overwriting existing webhook:', existing_webhook))
-  }
-  Sys.setenv(DISCORDR_WEBHOOK = webhook_address)
-}
-
-#' Get Default Discordr Webhook
-#'
-#' Obtains the currently set default username or returns an error if it not set within the current environment. If a default webhook is not set, Use \code{\link{set_discordr_webhook}} to set default environment webhook.
-#'
-#' @param verbose Return detailed messages on if webhook is currently set.
-#'
-#' @return Currently set webhook address environment variable; Will return an empty string and message if no webhook address is set
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' get_discordr_webhook()
-#' }
-get_discordr_webhook <- function(verbose = TRUE){
-  webhook_address <- Sys.getenv("DISCORDR_WEBHOOK")
-  if(nchar(webhook_address) == 0 && verbose){
-    message("Default discordr webhook not set. Use set_discordr_webhook to set a default webhook as an environment variable.")
-  }
-  return(webhook_address)
 }
 
 #' Discordr Setup Wizard

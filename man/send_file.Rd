@@ -4,11 +4,8 @@
 \alias{send_file}
 \title{Send File}
 \usage{
-send_file(
-  filename,
-  username = get_discordr_username(),
-  webhook = get_discordr_webhook()
-)
+send_file(filename, username = get_discordr_username(),
+  webhook = get_discordr_webhook())
 }
 \arguments{
 \item{filename}{filepath and filename of the file to be sent}

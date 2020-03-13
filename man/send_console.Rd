@@ -4,12 +4,9 @@
 \alias{send_console}
 \title{Send Console Output}
 \usage{
-send_console(
-  ...,
-  username = get_discordr_username(),
-  webhook = get_discordr_webhook(),
-  filename = tempfile(pattern = "discordr")
-)
+send_console(..., username = get_discordr_username(),
+  webhook = get_discordr_webhook(), filename = tempfile(pattern =
+  "discordr"))
 }
 \arguments{
 \item{...}{A single or set of expressions to be evaluated for console output}

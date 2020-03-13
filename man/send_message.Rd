@@ -4,11 +4,8 @@
 \alias{send_message}
 \title{Send Message}
 \usage{
-send_message(
-  message,
-  username = get_discordr_username(),
-  webhook = get_discordr_webhook()
-)
+send_message(message, username = get_discordr_username(),
+  webhook = get_discordr_webhook())
 }
 \arguments{
 \item{message}{Character string of message to send}
