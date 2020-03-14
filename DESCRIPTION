@@ -20,7 +20,9 @@ Imports:
     stringr,
     rstudioapi,
     texPreview,
-    dplyr
+    dplyr,
+    readr,
+    tibble
 Suggests:
     testthat (>= 2.1.0),
     covr

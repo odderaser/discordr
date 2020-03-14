@@ -41,6 +41,31 @@ test_that("set default discord connection", {
   expect_equal(conn_obj$username, get_default_discord_connection()$username)
 })
 
+context("Saving and Import Discord Connections")
+
+test_that("exporting connection works", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test')
+  export_discord_connection(conn_obj, 'test.csv')
+  expect_true(file.exists('test.csv'))
+})
+
+test_that("export two connections", {
+  conn_obj2 <- create_discord_connection(webhook_string = 'https://google2.com', username = 'test2')
+  export_discord_connection(conn_obj2, 'test.csv')
+  expect_true(file.exists('test.csv'))
+})
+
+test_that("import connections works", {
+  connections <- import_discord_connections('test.csv')
+  expect_equal(length(connections), 2)
+  expect_equal(connections[[1]]$webhook, 'https://google.com')
+  expect_equal(connections[[2]]$webhook, 'https://google2.com')
+  expect_equal(connections[[1]]$username, 'test')
+  expect_equal(connections[[2]]$username, 'test2')
+
+  file.remove('test.csv')
+})
+
 conn_obj <- create_discord_connection(webhook = Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"), username = 'Travis CI')
 
 context("Send Message")
@@ -82,11 +107,8 @@ test_that("stop function if no plot exists", {
 test_that("200 response for sent plots", {
   filename = tempfile(pattern = 'discordr', fileext = '.png')
 
-  print(dev.list())
   grDevices::png(filename = filename)
-  print(dev.list())
   plot(rnorm(5), rnorm(5))
-  print(dev.list())
   response <- send_current_plot(filename = filename, conn = conn_obj)
   expect_equal(response$status_code, 200)
 

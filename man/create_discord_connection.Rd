@@ -7,8 +7,8 @@
 create_discord_connection(
   webhook_string,
   username = get_default_discord_username(verbose = FALSE),
-  server_name = NULL,
-  channel_name = NULL,
+  server_name = "",
+  channel_name = "",
   set_default = FALSE
 )
 }

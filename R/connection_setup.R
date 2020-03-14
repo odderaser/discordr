@@ -58,7 +58,7 @@ get_default_discord_username <- function(verbose = TRUE){
 #' \dontrun{
 #' conn_obj <- create_discord_connection(webhook = 'https://google.com', username = 'test')
 #' }
-create_discord_connection <- function(webhook_string, username = get_default_discord_username(verbose = FALSE), server_name = NULL, channel_name = NULL, set_default = FALSE){
+create_discord_connection <- function(webhook_string, username = get_default_discord_username(verbose = FALSE), server_name = '', channel_name = '', set_default = FALSE){
   # check if username is not empty
   if(nchar(username) == 0){
     stop('Zero character username provided.')
@@ -110,4 +110,57 @@ get_default_discord_connection <- function(){
 #' }
 set_default_discord_connection <- function(conn){
   options(default_discordr_connection = conn)
+}
+
+#' Export Discord Connections
+#'
+#' @param conn Connection Object to Export
+#' @param filepath Filepath to new or existing connections file
+#' @param append Optional; Assumed to be TRUE to add connection objects, otherwise will overwrite existing file
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' conn_obj <- create_discord_connection(webhook = 'https://google.com', username = 'test')
+#' export_discord_connection(conn_obj, 'discord_connections.csv')
+#' }
+export_discord_connection <- function(conn, filepath, append = TRUE){
+  if(file.exists(filepath) && append){
+    conn_file <- readr::read_csv(filepath)
+    conn_file <- dplyr::bind_rows(conn_file, tibble::tibble(server_name = conn$server_name, channel_name = conn$channel_name, username = conn$username, webhook = conn$webhook))
+    readr::write_csv(conn_file, filepath)
+  }
+  else {
+    if(file.exists(filepath)){
+      file.remove(filepath)
+    }
+    conn_file <- readr::write_csv(tibble::tibble(server_name = conn$server_name, channel_name = conn$channel_name, username = conn$username, webhook = conn$webhook), filepath)
+  }
+}
+
+#' Import Discord Connections From File
+#'
+#' @param filepath Path to Discord Connections File
+#'
+#' @return List of Connection Objects
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' import_discord_connections('test.csv')
+#' }
+import_discord_connections <- function(filepath){
+  if(!file.exists(filepath)){
+    stop('connection file does not exist.')
+  }
+
+  conn_file <- readr::read_csv(filepath)
+  connections <- list()
+
+  for(i in 1:nrow(conn_file)){
+    connections[[i]] <- create_discord_connection(webhook_string = conn_file$webhook[i], username = conn_file$username[i], server_name = conn_file$server_name[i], channel_name = conn_file$channel_name[i])
+  }
+
+  return(connections)
 }
