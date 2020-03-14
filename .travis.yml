@@ -5,13 +5,13 @@ cache: packages
 
 os:
    - linux
-#   - osx
+   - osx
 
-#addons:
-#    homebrew:
-#      packages:
-#        - imagemagick
-#        - ghostscript
+addons:
+    homebrew:
+      packages:
+        - imagemagick
+        - ghostscript
 
 before_install:
    - if [ "$TRAVIS_OS_NAME" = "linux" ]; then tlmgr install standalone; fi
