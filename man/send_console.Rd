@@ -7,7 +7,8 @@
 send_console(
   ...,
   conn = get_default_discord_connection(),
-  filename = tempfile(pattern = "discordr")
+  filename = tempfile(pattern = "discordr"),
+  tibble_formatting = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ send_console(
 \item{conn}{Discord Connection Object containing Webhook and Username}
 
 \item{filename}{Alternative path to route console output; defaults to tempfile}
+
+\item{tibble_formatting}{By Default this is set to False, Use this option to format linebreaks specifically on newlines for large tibbles}
 }
 \value{
 None

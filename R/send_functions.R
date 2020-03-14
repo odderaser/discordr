@@ -169,6 +169,7 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
 #' @param ... A single or set of expressions to be evaluated for console output
 #' @param filename Alternative path to route console output; defaults to tempfile
 #' @param conn Discord Connection Object containing Webhook and Username
+#' @param tibble_formatting By Default this is set to False, Use this option to format linebreaks specifically on newlines for large tibbles
 #'
 #' @return None
 #' @export
@@ -238,13 +239,11 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
 
         new_line_locations <- stringr::str_locate_all(console_output, '[\n]')
         num_breaks <- ceiling(max(new_line_locations[[1]][,1]) / 1500)
-        break_locations <- tibble::tibble(index = new_line_locations[[1]][,1], mod_value = new_line_locations[[1]][,1] %% 1500)
-        break_indices <- sort(dplyr::arrange(break_locations, desc(mod_value))$index[1:(num_breaks - 1)])
+        break_locations <- tibble::tibble('index' = new_line_locations[[1]][,1], 'mod_value' = new_line_locations[[1]][,1] %% 1500)
+        break_indices <- sort(dplyr::arrange(break_locations, dplyr::desc(!!dplyr::sym('mod_value')))$index[1:(num_breaks - 1)])
         actual_break_indices <- tibble::tibble(start = c(0, break_indices), stop = c(break_indices, break_indices[length(break_indices)] + 1500))
 
         for(row_index in 1:nrow(actual_break_indices)){
-          print(actual_break_indices$start[row_index])
-          print(actual_break_indices$stop[row_index])
           formatted_console_substr <- paste('```', substr(console_output, actual_break_indices$start[row_index], actual_break_indices$stop[row_index] - 2), '```')
           res[[row_index]] <- send_message(formatted_console_substr, conn = conn)
           Sys.sleep(1)
