@@ -5,8 +5,7 @@
 \title{Send Rendered Latex Images}
 \usage{
 send_tex(tex_string, filename = tempfile(pattern = "discordr"),
-  density = 250, username = get_discordr_username(),
-  webhook = get_discordr_webhook())
+  density = 250, conn = get_default_discord_connection())
 }
 \arguments{
 \item{tex_string}{Character string of compileable latex code. Ensure you are using double slashes ('\\') for commands.}

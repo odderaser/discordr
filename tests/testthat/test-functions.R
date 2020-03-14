@@ -22,36 +22,44 @@ test_that("removing default username creates message but accepts", {
   expect_equal('', get_default_discord_username())
 })
 
+context("Creating Discord Connections")
+
+test_that("create discord connection object", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test')
+  expect_equal(conn_obj$webhook, 'https://google.com')
+  expect_equal(conn_obj$username, 'test')
+})
+
+test_that("zero character usernames", {
+  expect_error(create_discord_connection(webhook_string = 'test', username = ''))
+})
+
+conn_obj <- create_discord_connection(webhook = Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"), username = 'Travis CI')
+
 context("Send Message")
 
 test_that("empty strings do not get sent", {
-  expect_null(send_message(''))
+  expect_null(send_message('', conn = conn_obj))
   expect_message(send_message(''), 'Empty message provided.')
 })
 
 test_that("204 response for sent messages", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
-  response <- send_message('testing...')
+  response <- send_message('testing...', conn = conn_obj)
   expect_equal(response$status_code, 204)
 })
 
 context("Send File")
 
 test_that("stop function if file does not exist", {
-  expect_error(send_file('does_not_exist.abc'), regexp = 'File not found.')
+  expect_error(send_file('does_not_exist.abc', conn = conn_obj), regexp = 'File not found.')
 })
 
 test_that("200 response for sent files", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
   # create example file
   filename <- tempfile(pattern = 'discordr')
   write.csv(x = rnorm(5), file = filename)
 
-  response <- send_file(filename)
+  response <- send_file(filename, conn = conn_obj)
   expect_equal(response$status_code, 200)
 
   # remove example file
@@ -61,7 +69,7 @@ test_that("200 response for sent files", {
 context("Send Image (Base Graphics)")
 
 test_that("stop function if no plot exists", {
-  expect_error(send_current_plot(), regexp = "No plots found.")
+  expect_error(send_current_plot(conn = conn_obj), regexp = "No plots found.")
 })
 
 test_that("200 response for sent plots", {
@@ -72,7 +80,7 @@ test_that("200 response for sent plots", {
   print(dev.list())
   plot(rnorm(5), rnorm(5))
   print(dev.list())
-  response <- send_current_plot(filename = filename)
+  response <- send_current_plot(filename = filename, conn = conn_obj)
   expect_equal(response$status_code, 200)
 
   # Remove files
@@ -83,37 +91,34 @@ test_that("200 response for sent plots", {
 context("Send Image (ggplot2 Graphics)")
 
 test_that("stop function if no plot exists", {
-  expect_error(send_current_ggplot(), regexp = "No ggplots found in Plots pane.")
+  expect_error(send_current_ggplot(conn = conn_obj), regexp = "No ggplots found in Plots pane.")
 })
 
 test_that("200 response for sent plots", {
   ggplot2::ggplot(data = dplyr::tibble(x = rnorm(5), y = rnorm(5)), ggplot2::aes(x = x, y = y)) + ggplot2::geom_point()
-  response <- send_current_ggplot()
+  response <- send_current_ggplot(conn = conn_obj)
   expect_equal(response$status_code, 200)
 })
 
 context('Send Console Output')
 
 test_that("stop function if no calls provided.", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
-  expect_message(send_console(), 'No calls provided.')
+  expect_message(send_console(conn = conn_obj), 'No calls provided.')
 })
 
 test_that("stop function if no console output provided", {
 
-  expect_message(send_console(invisible()), 'No console output from provided functions.')
+  expect_message(send_console(invisible(), conn = conn_obj), 'No console output from provided functions.')
 })
 
 test_that("204 response for console output", {
   # Basic response
-  response <- send_console(5 + 5)
+  response <- send_console(5 + 5, conn = conn_obj)
   expect_equal(response$status_code, 204)
 
   # 2000+ character output
   options(max.print = 5000)
-  response_list <- send_console(paste(replicate(2000, "a"), collapse = ""))
+  response_list <- send_console(paste(replicate(2000, "a"), collapse = ""), conn = conn_obj)
   options(max.print = 1000)
 
   # two responses expected
@@ -132,40 +137,29 @@ test_that("204 response for console output", {
 context('Send R Object')
 
 test_that("stop function if no objects provided",{
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
-  response <- expect_message(send_robject(), 'No objects provided.')
+  response <- expect_message(send_robject(conn = conn_obj), 'No objects provided.')
   expect_null(response)
 })
 
 test_that("200 response for sent Rdata file", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
   x <<- c(1,2,3,4,5)
   y <<- matrix(rep(0, 20), nrow = 4)
   z <<- dplyr::tibble(a = c(1,2,3,4,5), b = c(1,2,3,4,5))
 
-  response <- send_robject(x, y, z)
+  response <- send_robject(x, y, z, conn = conn_obj)
   expect_equal(response$status_code, 200)
 })
 
 context('Send Tex Image')
 
 test_that("stop function if no tex string provided", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
-
-  expect_message(send_tex(""))
+  expect_message(send_tex("", conn = conn_obj))
 })
 
 test_that("200 response for sent tex image", {
-  set_discordr_webhook(Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"))
-  set_discordr_username('Travis CI')
 
   tex_string <- "$\\int^a_b \\frac{1}{3}x^3 dx$"
 
-  response <- send_tex(tex_string)
+  response <- send_tex(tex_string, conn = conn_obj)
   expect_equal(response$status_code, 200)
 })

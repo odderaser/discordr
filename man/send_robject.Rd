@@ -5,8 +5,7 @@
 \title{Send R Objects}
 \usage{
 send_robject(..., filename = tempfile(pattern = "discordr", fileext =
-  ".RData"), username = get_discordr_username(),
-  webhook = get_discordr_webhook())
+  ".RData"), conn = get_default_discord_connection())
 }
 \arguments{
 \item{...}{Single or Multiple R Objects to be contained within a single RData file}

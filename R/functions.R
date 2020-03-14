@@ -43,6 +43,32 @@ get_default_discord_username <- function(verbose = TRUE){
   return(username)
 }
 
+#' Create Discord Connection Object
+#'
+#' @param webhook_string Webhook URL for sending discord comments
+#' @param username Defaults to \code{get_default_discord_username()}
+#' @param server_name Optional - Used for discriminating webhooks in a human readable format
+#' @param channel_name Optional - Used for discriminating webhooks in a human readable format
+#'
+#' @return DiscordR connection object containing provided information
+#' @export
+#'
+#' @examples
+create_discord_connection <- function(webhook_string, username = get_default_discord_username(verbose = FALSE), server_name = NULL, channel_name = NULL){
+  # check if username is not empty
+  if(nchar(username) == 0){
+    stop('Zero character username provided.')
+  }
+
+  connection_object <- NULL
+  connection_object$webhook = webhook_string
+  connection_object$username = username
+  connection_object$server_name = server_name
+  connection_object$channel_name = channel_name
+
+  return(connection_object)
+}
+
 #' Discordr Setup Wizard
 #'
 #' Walks the user through checking if an existing configuration exists, changing an existing configuration, or setting up a new configuration.
@@ -135,14 +161,14 @@ discordr_setup <- function(){
 #' }
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-send_message <- function(message, username = get_discordr_username(), webhook = get_discordr_webhook()){
+send_message <- function(message, conn = get_default_discord_connection()){
   res <- NULL
 
   if(nchar(message) > 0){
     body_data <- list(content = message,
-                      username = username)
+                      username = conn$username)
 
-    res <- httr::POST(url = webhook,
+    res <- httr::POST(url = conn$webhook,
                      body = body_data,
                      encode = "json")
   }
@@ -170,14 +196,14 @@ send_message <- function(message, username = get_discordr_username(), webhook = 
 #' }
 #' @seealso
 #' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-send_file <- function(filename, username = get_discordr_username(), webhook = get_discordr_webhook()){
+send_file <- function(filename, conn = get_default_discord_connection()){
   res <- NULL
 
   if(file.exists(filename)){
     body_data <- list(content = httr::upload_file(filename),
-                      username = username)
+                      username = conn$username)
 
-    res <- httr::POST(url = webhook,
+    res <- httr::POST(url = conn$webhook,
                      body = body_data,
                      encode = 'multipart')
 
@@ -209,7 +235,7 @@ send_file <- function(filename, username = get_discordr_username(), webhook = ge
 #' }
 #' @seealso
 #' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_plot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+send_current_plot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   image_dimensions <- grDevices::dev.size("px")
 
@@ -226,9 +252,9 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 
   if(file.exists(filename)){
     body_data <- list(content = httr::upload_file(filename),
-                      username = username)
+                      username = conn$username)
 
-    res <- httr::POST(url = webhook,
+    res <- httr::POST(url = conn$webhook,
                      body = body_data,
                      encode = "multipart")
   }
@@ -257,7 +283,7 @@ send_current_plot <- function(username = get_discordr_username(), webhook = get_
 #' }
 #' @seealso
 #' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_ggplot <- function(username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+send_current_ggplot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   if(!is.null(ggplot2::last_plot())){
     ggplot2::ggsave(filename)
@@ -267,9 +293,9 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
   }
 
   body_data <- list(content = httr::upload_file(filename),
-                    username = username)
+                    username = conn$username)
 
-  res <- httr::POST(url = webhook,
+  res <- httr::POST(url = conn$webhook,
                    body = body_data,
                    encode = "multipart")
 
@@ -294,7 +320,7 @@ send_current_ggplot <- function(username = get_discordr_username(), webhook = ge
 #' }
 #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
-send_console <- function(..., username = get_discordr_username(), webhook = get_discordr_webhook(), filename = tempfile(pattern = 'discordr')){
+send_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr')){
   res <- NULL
 
   if(length(list(...)) == 0){
@@ -336,7 +362,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 
         for(console_output_index in 1:length(split_console_output)){
           current_console_output_split <- paste('```', split_console_output[console_output_index], '```', sep = '\n')
-          res[[console_output_index]] <- send_message(current_console_output_split, username = username, webhook = webhook)
+          res[[console_output_index]] <- send_message(current_console_output_split, conn = conn)
 
           #avoid timeout errors
           Sys.sleep(1)
@@ -344,7 +370,7 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
       }
       else {
         console_output <- paste('```', console_output, '```', sep = '\n')
-        res <- send_message(console_output, username = username, webhook = webhook)
+        res <- send_message(console_output, conn = conn)
       }
     }
   }
@@ -368,12 +394,12 @@ send_console <- function(..., username = get_discordr_username(), webhook = get_
 #' y <- matrix(rep(0, 4), rows = 2, cols = 2)
 #' send_robject(x, y, filename = 'test_data.RData')
 #' }
-send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), username = get_discordr_username(), webhook = get_discordr_webhook()){
+send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), conn = get_default_discord_connection()){
   res <- NULL
 
   if(length(list(...)) > 0){
     save(..., file = filename)
-    res <- send_file(filename, username = username, webhook = webhook)
+    res <- send_file(filename, conn = conn)
   }
   else {
     message('No objects provided.')
@@ -396,7 +422,7 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 #' @export
 #'
 #' @examples
-send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, username = get_discordr_username(), webhook = get_discordr_webhook()){
+send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, conn = get_default_discord_connection()){
 
   res <- NULL
 
@@ -405,7 +431,7 @@ send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), dens
   }
   else {
     texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
-    res <- send_file(filename = paste(filename, '.png', sep = ''), username = username, webhook = webhook)
+    res <- send_file(filename = paste(filename, '.png', sep = ''), conn = conn)
   }
 
   invisible(res)

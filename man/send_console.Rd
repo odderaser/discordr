@@ -4,18 +4,17 @@
 \alias{send_console}
 \title{Send Console Output}
 \usage{
-send_console(..., username = get_discordr_username(),
-  webhook = get_discordr_webhook(), filename = tempfile(pattern =
-  "discordr"))
+send_console(..., conn = get_default_discord_connection(),
+  filename = tempfile(pattern = "discordr"))
 }
 \arguments{
 \item{...}{A single or set of expressions to be evaluated for console output}
 
+\item{filename}{Optional - Save console output to a file, defaults to a temporary file}
+
 \item{username}{Username to use for sender of message, defaults to environment set username}
 
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
-
-\item{filename}{Optional - Save console output to a file, defaults to a temporary file}
 }
 \value{
 None

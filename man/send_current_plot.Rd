@@ -4,16 +4,15 @@
 \alias{send_current_plot}
 \title{Send Current Plot}
 \usage{
-send_current_plot(username = get_discordr_username(),
-  webhook = get_discordr_webhook(), filename = tempfile(pattern =
-  "discordr", fileext = ".png"))
+send_current_plot(conn = get_default_discord_connection(),
+  filename = tempfile(pattern = "discordr", fileext = ".png"))
 }
 \arguments{
+\item{filename}{Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename}
+
 \item{username}{Username to use for sender of message, defaults to environment set username}
 
 \item{webhook}{Webhook to which the message should be sent, defaults to environment set webhook}
-
-\item{filename}{Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename}
 }
 \value{
 None
