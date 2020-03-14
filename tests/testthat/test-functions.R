@@ -171,6 +171,24 @@ test_that("stop function if no console output provided", {
   expect_message(send_console(invisible(), conn = conn_obj), 'No console output from provided functions.')
 })
 
+test_that("tibble_formatting option works", {
+  set.seed(3005)
+  test_tibble <- tibble::tibble(x = rnorm(1000), y = rnorm(1000))
+  response_list <- send_console(print(test_tibble, n = 2000), conn = conn_obj, tibble_formatting = TRUE)
+
+  expect_equal(length(response_list), 16)
+
+  # extract response status codes
+  response_status_codes <- rep(0, length(response_list))
+  for(response_index in 1:length(response_list)){
+    response_status_codes[response_index] <- response_list[[response_index]]$status_code
+  }
+
+  # all status codes should be 204
+  expect_setequal(response_status_codes, rep(204, length(response_list)))
+
+})
+
 test_that("204 response for console output", {
   # Basic response
   response <- send_console(5 + 5, conn = conn_obj)
@@ -187,7 +205,7 @@ test_that("204 response for console output", {
   # extract response status codes
   response_status_codes <- rep(0, length(response_list))
   for(response_index in 1:length(response_list)){
-    response_status_codes[response_index] <- response$status_code
+    response_status_codes[response_index] <- response_list[[response_index]]$status_code
   }
 
   # all status codes should be 204

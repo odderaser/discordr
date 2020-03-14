@@ -179,7 +179,7 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
 #' }
 #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}
-send_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr')){
+send_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr'), tibble_formatting = FALSE){
   res <- NULL
 
   if(length(list(...)) == 0){
@@ -211,25 +211,44 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
       message('No console output from provided functions.')
     }
     else {
+      if(!tibble_formatting){
+        console_output <- readChar(filename, file.info(filename)$size)
 
-      console_output <- readChar(filename, file.info(filename)$size)
+        nchar_split <- 1500
+        if(nchar(console_output) > nchar_split){
+          split_console_output <- substring(console_output, seq(1, nchar(console_output), nchar_split), seq(nchar_split, nchar(console_output), nchar_split))
+          res <- list()
 
-      nchar_split <- 1500
-      if(nchar(console_output) > nchar_split){
-        split_console_output <- substring(console_output, seq(1, nchar(console_output), nchar_split), seq(nchar_split, nchar(console_output), nchar_split))
-        res <- list()
+          for(console_output_index in 1:length(split_console_output)){
+            current_console_output_split <- paste('```', split_console_output[console_output_index], '```', sep = '\n')
+            res[[console_output_index]] <- send_message(current_console_output_split, conn = conn)
 
-        for(console_output_index in 1:length(split_console_output)){
-          current_console_output_split <- paste('```', split_console_output[console_output_index], '```', sep = '\n')
-          res[[console_output_index]] <- send_message(current_console_output_split, conn = conn)
-
-          #avoid timeout errors
-          Sys.sleep(1)
+            #avoid timeout errors
+            Sys.sleep(1)
+          }
+        }
+        else {
+          console_output <- paste('```', console_output, '```', sep = '\n')
+          res <- send_message(console_output, conn = conn)
         }
       }
       else {
-        console_output <- paste('```', console_output, '```', sep = '\n')
-        res <- send_message(console_output, conn = conn)
+        console_output <- readChar(filename, file.info(filename)$size)
+        res <- list()
+
+        new_line_locations <- stringr::str_locate_all(console_output, '[\n]')
+        num_breaks <- ceiling(max(new_line_locations[[1]][,1]) / 1500)
+        break_locations <- tibble::tibble(index = new_line_locations[[1]][,1], mod_value = new_line_locations[[1]][,1] %% 1500)
+        break_indices <- sort(dplyr::arrange(break_locations, desc(mod_value))$index[1:(num_breaks - 1)])
+        actual_break_indices <- tibble::tibble(start = c(0, break_indices), stop = c(break_indices, break_indices[length(break_indices)] + 1500))
+
+        for(row_index in 1:nrow(actual_break_indices)){
+          print(actual_break_indices$start[row_index])
+          print(actual_break_indices$stop[row_index])
+          formatted_console_substr <- paste('```', substr(console_output, actual_break_indices$start[row_index], actual_break_indices$stop[row_index] - 2), '```')
+          res[[row_index]] <- send_message(formatted_console_substr, conn = conn)
+          Sys.sleep(1)
+        }
       }
     }
   }
