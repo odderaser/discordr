@@ -19,12 +19,12 @@ install_github("EriqLaplus/discordr")
 
 ## Setup
 
-This packages functions through Discord's easy-to-use webhook system. If you are the owner or administrator of a channel, you can setup a webhook by entering the channel settings (edit channel) and navigating to the webhook tab. If you are the participant of a channel, you may request a webhook from an administrator in order to use this package. While not required, it is recommended to set a default username and webhook for easier use. In order to easily setup a webhook and username, the setup function `discordr_setup()` can be called for an interactive menu walkthrough. See documentation for programmatically setting a default environment webhook and username.
+This packages functions through Discord's easy-to-use webhook system. If you are the owner or administrator of a channel, you can setup a webhook by entering the channel settings (edit channel) and navigating to the webhook tab. If you are the participant of a channel, you may request a webhook from a server admin in order to use this package. While not required, it is recommended to set a default connection which consists of a username and webhook for easier use. If you use many webhooks in many different places, the connection objects make it mix and match. See documentation for programmatically setting a default environment webhook and username.
 
 ``` r
 library(discordr)
 
-discordr_setup()
+conn_obj <- create_discord_connection(webhook = 'your-webhook-here.com', username = 'preferred username', set_default = TRUE)
 ```
 
 ## Examples
@@ -41,7 +41,7 @@ send_file("hello_world.jpg")
 send_file("updated_dataset.csv")
 ```
 
-You can use the `send_current_plot` or `send_current_ggplot` functions to send the last plot shown in the Plots tab of RStudio. If using a ggplot workflow, using the appropriate `send_current_ggplot` function is recommended to obtain the highest image resolution.
+You can use the `send_plot_code` or `send_current_ggplot` functions to either compile and send a graphic or send the last plot shown in the Plots tab of RStudio. If using a ggplot workflow, using the appropriate `send_current_ggplot` function is recommended to obtain the highest image resolution.
 
 ``` r
 send_current_ggplot()
