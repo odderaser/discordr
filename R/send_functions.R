@@ -18,7 +18,7 @@ send_message <- function(message, conn = get_default_discord_connection()){
   res <- NULL
 
   if(nchar(message) > 0){
-    body_data <- list(content = message,
+    body_data <- list(content = substr(message, 1, 2000),
                       username = conn$username)
 
     res <- httr::POST(url = conn$webhook,
