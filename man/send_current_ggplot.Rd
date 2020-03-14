@@ -2,7 +2,7 @@
 % Please edit documentation in R/send_functions.R
 \name{send_current_ggplot}
 \alias{send_current_ggplot}
-\title{Send Current Plot (ggplot version)}
+\title{Send Current GGPlot}
 \usage{
 send_current_ggplot(
   conn = get_default_discord_connection(),
@@ -18,8 +18,7 @@ send_current_ggplot(
 None
 }
 \description{
-This function works identical to \code{\link{send_current_plot}} except that it appears to provide a higher resolution and only work for plots
-constructed using a ggplot workflow.
+Send images of GGplot which are currently shown in the plots pane of RStudio or elsewhere.
 }
 \examples{
 \dontrun{
@@ -27,5 +26,5 @@ send_current_ggplot()
 }
 }
 \seealso{
-\code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
+\code{\link{send_plot_code}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 }

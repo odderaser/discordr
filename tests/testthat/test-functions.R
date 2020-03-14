@@ -101,20 +101,12 @@ test_that("200 response for sent files", {
 context("Send Image (Base Graphics)")
 
 test_that("stop function if no plot exists", {
-  expect_error(send_current_plot(conn = conn_obj), regexp = "No plots found.")
+  expect_error(send_plot_code(conn = conn_obj), regexp = "No plot code provided.")
 })
 
 test_that("200 response for sent plots", {
-  filename = tempfile(pattern = 'discordr', fileext = '.png')
-
-  grDevices::png(filename = filename)
-  plot(rnorm(5), rnorm(5))
-  response <- send_current_plot(filename = filename, conn = conn_obj)
+  response <- send_plot_code(plot(rnorm(5), rnorm(5)), abline(h = 0), abline(v = 0), conn = conn_obj)
   expect_equal(response$status_code, 200)
-
-  # Remove files
-  file.remove(filename)
-  file.remove('Rplots.pdf')
 })
 
 context("Send Image (ggplot2 Graphics)")

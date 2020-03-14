@@ -23,5 +23,5 @@ send_file('image.jpg')
 }
 }
 \seealso{
-\code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
+\code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 }

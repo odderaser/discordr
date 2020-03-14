@@ -13,7 +13,7 @@
 #' send_message("Hello World!")
 #' }
 #'
-#' @seealso \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
+#' @seealso \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_message <- function(message, conn = get_default_discord_connection()){
   res <- NULL
 
@@ -47,7 +47,7 @@ send_message <- function(message, conn = get_default_discord_connection()){
 #' send_file('image.jpg')
 #' }
 #' @seealso
-#' \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
+#' \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
 send_file <- function(filename, conn = get_default_discord_connection()){
   res <- NULL
 
@@ -68,12 +68,12 @@ send_file <- function(filename, conn = get_default_discord_connection()){
   invisible(res)
 }
 
-#' Send Current Plot
+#' Send Plot Code
 #'
-#' Sends the last plot displayed within the plots tab in RStudio. This function will display both ggplot and base graphics
-#' with a lower resolution than only ggplot graphics. In order to save and send the file, a random name for the image will
-#' be generated and saved temporarily.
+#' Runs and saves the plot code provided. In order to save and send the file, a random name
+#' for the image will be generated and saved temporarily.
 #'
+#' @param ... Plot code to run and save
 #' @param conn Discord Connection Object containing Webhook and Username
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
@@ -82,36 +82,54 @@ send_file <- function(filename, conn = get_default_discord_connection()){
 #'
 #' @examples
 #' \dontrun{
-#' send_current_plot()
+#' send_plot_code(plot(rnorm(5), rnorm(5), conn = conn_obj))()
 #' }
 #' @seealso
 #' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_plot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+send_plot_code <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
-  image_dimensions <- grDevices::dev.size("px")
+  res <- NULL
 
-  grDevices::dev.copy(grDevices::png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
-
-
-  if(file.exists(filename)){
-    body_data <- list(content = httr::upload_file(filename),
-                      username = conn$username)
-
-    res <- httr::POST(url = conn$webhook,
-                     body = body_data,
-                     encode = "multipart")
+  if(length(list(...)) == 0){
+    stop('No plot code provided.')
   }
   else {
-    stop('No plots found.')
-  }
+      grDevices::png(filename = filename)
 
-  invisible(res)
+      # code heavily inspired by capture.output
+      pf = parent.frame()
+      args <- substitute(list(...))[-1L]
+      evalVis <- function(expr) withVisible(eval(expr, pf))
+      for(i in 1:length(substitute(list(...))[-1L])){
+        expr <- args[[i]]
+        tmp <- switch(mode(expr),
+                      expression = lapply(expr, evalVis),
+                      call = ,
+                      name = list(evalVis(expr)),
+                      stop("bad argument"))
+      }
+
+      grDevices::dev.off()
+
+    if(file.exists(filename)){
+      body_data <- list(content = httr::upload_file(filename),
+                        username = conn$username)
+
+      res <- httr::POST(url = conn$webhook,
+                       body = body_data,
+                       encode = "multipart")
+    }
+    else {
+      stop('Plot output not saved.')
+    }
+
+    invisible(res)
+  }
 }
 
-#' Send Current Plot (ggplot version)
+#' Send Current GGPlot
 #'
-#' This function works identical to \code{\link{send_current_plot}} except that it appears to provide a higher resolution and only work for plots
-#' constructed using a ggplot workflow.
+#' Send images of GGplot which are currently shown in the plots pane of RStudio or elsewhere.
 #'
 #' @param conn Discord Connection Object containing Webhook and Username
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
@@ -124,7 +142,7 @@ send_current_plot <- function(conn = get_default_discord_connection(), filename 
 #' send_current_ggplot()
 #' }
 #' @seealso
-#' \code{\link{send_current_plot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
+#' \code{\link{send_plot_code}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
 send_current_ggplot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   if(!is.null(ggplot2::last_plot())){
@@ -160,7 +178,7 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
 #' send_console(2 + 2)
 #' }
 #' @seealso
-#' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+#' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}
 send_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr')){
   res <- NULL
 

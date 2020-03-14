@@ -29,5 +29,5 @@ send_console(2 + 2)
 }
 }
 \seealso{
-\code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_current_plot}}, \code{\link{send_current_ggplot}}
+\code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}
 }
