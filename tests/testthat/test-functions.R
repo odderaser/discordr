@@ -34,6 +34,13 @@ test_that("zero character usernames", {
   expect_error(create_discord_connection(webhook_string = 'test', username = ''))
 })
 
+test_that("set default discord connection", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test')
+  set_default_discord_connection(conn_obj)
+  expect_equal(conn_obj$webhook, get_default_discord_connection()$webhook)
+  expect_equal(conn_obj$username, get_default_discord_connection()$username)
+})
+
 conn_obj <- create_discord_connection(webhook = Sys.getenv("DISCORDR_TEST_WEBHOOK_URL"), username = 'Travis CI')
 
 context("Send Message")

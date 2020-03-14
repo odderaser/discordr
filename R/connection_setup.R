@@ -49,12 +49,16 @@ get_default_discord_username <- function(verbose = TRUE){
 #' @param username Defaults to \code{get_default_discord_username()}
 #' @param server_name Optional - Used for discriminating webhooks in a human readable format
 #' @param channel_name Optional - Used for discriminating webhooks in a human readable format
+#' @param set_default Optional - Set created connection as the default connection
 #'
 #' @return DiscordR connection object containing provided information
 #' @export
 #'
 #' @examples
-create_discord_connection <- function(webhook_string, username = get_default_discord_username(verbose = FALSE), server_name = NULL, channel_name = NULL){
+#' \dontrun{
+#' conn_obj <- create_discord_connection(webhook = 'https://google.com', username = 'test')
+#' }
+create_discord_connection <- function(webhook_string, username = get_default_discord_username(verbose = FALSE), server_name = NULL, channel_name = NULL, set_default = FALSE){
   # check if username is not empty
   if(nchar(username) == 0){
     stop('Zero character username provided.')
@@ -66,5 +70,44 @@ create_discord_connection <- function(webhook_string, username = get_default_dis
   connection_object$server_name = server_name
   connection_object$channel_name = channel_name
 
+  if(set_default){
+    set_default_discord_connection(connection_object)
+  }
+
   return(connection_object)
+}
+
+#' Get Default Discord Connnection
+#'
+#' Retreives Default Connection Object from R Options if set
+#'
+#' @return DiscordR Connection Object
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' get_default_discord_connection()
+#' }
+get_default_discord_connection <- function(){
+  conn <- getOption('default_discordr_connection')
+  if(is.null(conn)){
+    stop("No default discord connection set.")
+  }
+
+  return(conn)
+}
+
+#' Set Default Discord Connection
+#'
+#' @param conn Discord Connection Object
+#'
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' conn_obj <- create_discord_connection(webhook = 'https://google.com', username = 'test')
+#' set_default_discord_connection(conn_obj)
+#' }
+set_default_discord_connection <- function(conn){
+  options(default_discordr_connection = conn)
 }

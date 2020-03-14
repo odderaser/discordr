@@ -3,8 +3,7 @@
 #' Sends a message using the username provided to the channel of the webhook provided
 #'
 #' @param message Character string of message to send
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #'
 #' @return None
 #' @export
@@ -38,8 +37,7 @@ send_message <- function(message, conn = get_default_discord_connection()){
 #' Send file from the given filename to the username and webhook provided
 #'
 #' @param filename filepath and filename of the file to be sent
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #'
 #' @return None
 #' @export
@@ -76,8 +74,7 @@ send_file <- function(filename, conn = get_default_discord_connection()){
 #' with a lower resolution than only ggplot graphics. In order to save and send the file, a random name for the image will
 #' be generated and saved temporarily.
 #'
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
 #' @return None
@@ -93,16 +90,8 @@ send_current_plot <- function(conn = get_default_discord_connection(), filename 
 
   image_dimensions <- grDevices::dev.size("px")
 
-  if(Sys.info()[['sysname']] == 'Darwin'){
-    print(dev.cur())
-    grDevices::quartz.save(file = filename, width = image_dimensions[1], height = image_dimensions[2])
-    grDevices::dev.off()
-  }
-  else {
-    print(dev.cur())
-    grDevices::dev.copy(grDevices::png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
-    grDevices::dev.off()
-  }
+  grDevices::dev.copy(grDevices::png, filename = filename, width = image_dimensions[1], height = image_dimensions[2])
+
 
   if(file.exists(filename)){
     body_data <- list(content = httr::upload_file(filename),
@@ -124,8 +113,7 @@ send_current_plot <- function(conn = get_default_discord_connection(), filename 
 #' This function works identical to \code{\link{send_current_plot}} except that it appears to provide a higher resolution and only work for plots
 #' constructed using a ggplot workflow.
 #'
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #' @param filename Optional - Filepath indicating where to save image; Provide to manually override the temporary directory and filename
 #'
 #' @return None
@@ -161,9 +149,8 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
 #' This functions accepts an expression whose console output you would like to send to the specified discord channel
 #'
 #' @param ... A single or set of expressions to be evaluated for console output
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
-#' @param filename Optional - Save console output to a file, defaults to a temporary file
+#' @param filename Alternative path to route console output; defaults to tempfile
+#' @param conn Discord Connection Object containing Webhook and Username
 #'
 #' @return None
 #' @export
@@ -236,8 +223,7 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
 #'
 #' @param ... Single or Multiple R Objects to be contained within a single RData file
 #' @param filename Default is a random string saved in the temporary directory; change this if you would like the RData file to be human-readable and in a different location.
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #'
 #' @return None
 #' @export
@@ -269,13 +255,17 @@ send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext 
 #' @param tex_string Character string of compileable latex code. Ensure you are using double slashes ('\\') for commands.
 #' @param filename Default is a random string saved in the temporary directory; change this if you would like the RData file to be human-readable and in a different location.
 #' @param density Density of latex image to be saved. Default is 250.
-#' @param username Username to use for sender of message, defaults to environment set username
-#' @param webhook Webhook to which the message should be sent, defaults to environment set webhook
+#' @param conn Discord Connection Object containing Webhook and Username
 #'
 #' @return None
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' tex_string <- "$\\int^a_b \\frac{1}{3}x^3 dx$"
+#' send_tex(tex_string, conn = conn_obj)
+#' }
+
 send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, conn = get_default_discord_connection()){
 
   res <- NULL
