@@ -24,7 +24,7 @@ before_install:
    - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo tlmgr install multirow; fi
 
 after_success:
-  - Rscript -e 'covr::codecov(function_exclusions = c("discordr_setup"))'
+  - Rscript -e 'covr::codecov()'
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
   - chmod +x send.sh
   - ./send.sh success $DISCORD_WEBHOOK_URL
