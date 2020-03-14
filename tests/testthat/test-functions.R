@@ -41,6 +41,18 @@ test_that("set default discord connection", {
   expect_equal(conn_obj$username, get_default_discord_connection()$username)
 })
 
+test_that("set default works", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test', set_default = TRUE)
+  default_conn <- get_default_discord_connection()
+  expect_equal(default_conn$webhook, 'https://google.com')
+  expect_equal(default_conn$username, 'test')
+})
+
+test_that("removing default works", {
+  set_default_discord_connection(NULL)
+  expect_error(get_default_discord_connection(), "No default discord connection set.")
+})
+
 context("Saving and Import Discord Connections")
 
 test_that("exporting connection works", {
@@ -55,8 +67,35 @@ test_that("export two connections", {
   expect_true(file.exists('test.csv'))
 })
 
-test_that("import connections works", {
+test_that("overwrite existing file", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test')
+  conn_obj2 <- create_discord_connection(webhook_string = 'https://google2.com', username = 'test2')
+
+  export_discord_connection(conn_obj, 'test.csv')
+  export_discord_connection(conn_obj2, 'test.csv', append = FALSE)
+
   connections <- import_discord_connections('test.csv')
+
+  expect_equal(length(connections), 1)
+  expect_equal(connections[[1]]$webhook, 'https://google2.com')
+  expect_equal(connections[[1]]$username, 'test2')
+
+  file.remove('test.csv')
+})
+
+test_that("error on non-existant connection file import", {
+  expect_error(import_discord_connections('does-not-exist.csv'), 'connection file does not exist.')
+})
+
+test_that("import connections works", {
+  conn_obj <- create_discord_connection(webhook_string = 'https://google.com', username = 'test')
+  conn_obj2 <- create_discord_connection(webhook_string = 'https://google2.com', username = 'test2')
+
+  export_discord_connection(conn_obj, 'test.csv')
+  export_discord_connection(conn_obj2, 'test.csv')
+
+  connections <- import_discord_connections('test.csv')
+
   expect_equal(length(connections), 2)
   expect_equal(connections[[1]]$webhook, 'https://google.com')
   expect_equal(connections[[2]]$webhook, 'https://google2.com')
