@@ -8,6 +8,8 @@
 
 The goal of discordr is to make collaborating in Discord easier through a set of utility functions.
 
+DiscordR uses the easy-to-use webhooks provided by Discord to interaction with channels. For more fine-grained control using websockets interacting directly with the Discord API, there is [another package](https://github.com/bill-ash/discoRd) which may be more appropriate.
+
 ## Installation
 
 You can install the released version of discordr from GitHub with:
