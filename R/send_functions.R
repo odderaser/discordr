@@ -1,4 +1,4 @@
-#' Send Message
+#' Send Message via Webhook
 #'
 #' Sends a message using the username provided to the channel of the webhook provided
 #'
@@ -10,11 +10,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' send_message("Hello World!")
+#' send_webhook_message("Hello World!")
 #' }
 #'
 #' @seealso \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-send_message <- function(message, conn = get_default_discord_connection()){
+send_webhook_message <- function(message, conn = get_default_discord_connection()){
   res <- NULL
 
   if(nchar(message) > 0){
@@ -32,7 +32,7 @@ send_message <- function(message, conn = get_default_discord_connection()){
   invisible(res)
 }
 
-#' Send File
+#' Send File via Webhook
 #'
 #' Send file from the given filename to the username and webhook provided
 #'
@@ -47,8 +47,8 @@ send_message <- function(message, conn = get_default_discord_connection()){
 #' send_file('image.jpg')
 #' }
 #' @seealso
-#' \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}, \code{\link{send_console}}
-send_file <- function(filename, conn = get_default_discord_connection()){
+#' \code{\link{send_webhook_file}}, \code{\link{send_webhook_plot_code}}, \code{\link{send_webhook_ggplot}}, \code{\link{send_webhook_console}}
+send_webhook_file <- function(filename, conn = get_default_discord_connection()){
   res <- NULL
 
   if(file.exists(filename)){
@@ -68,7 +68,7 @@ send_file <- function(filename, conn = get_default_discord_connection()){
   invisible(res)
 }
 
-#' Send Plot Code
+#' Send Plot Code via Webhook
 #'
 #' Runs and saves the plot code provided. In order to save and send the file, a random name
 #' for the image will be generated and saved temporarily.
@@ -85,8 +85,8 @@ send_file <- function(filename, conn = get_default_discord_connection()){
 #' send_plot_code(plot(rnorm(5), rnorm(5), conn = conn_obj))()
 #' }
 #' @seealso
-#' \code{\link{send_current_ggplot}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_plot_code <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+#' \code{\link{send_webhook_ggplot}}, \code{\link{send_webhook_file}}, \code{\link{send_webhook_message}}, \code{\link{send_webhook_console}}
+send_webhook_plot_code <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   res <- NULL
 
@@ -127,7 +127,7 @@ send_plot_code <- function(..., conn = get_default_discord_connection(), filenam
   }
 }
 
-#' Send Current GGPlot
+#' Send Current ggplot via webhook
 #'
 #' Send images of GGplot which are currently shown in the plots pane of RStudio or elsewhere.
 #'
@@ -143,7 +143,7 @@ send_plot_code <- function(..., conn = get_default_discord_connection(), filenam
 #' }
 #' @seealso
 #' \code{\link{send_plot_code}}, \code{\link{send_file}}, \code{\link{send_message}}, \code{\link{send_console}}
-send_current_ggplot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
+send_webhook_ggplot <- function(conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr', fileext = '.png')){
 
   if(!is.null(ggplot2::last_plot())){
     ggplot2::ggsave(filename)
@@ -162,7 +162,7 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
   invisible(res)
 }
 
-#' Send Console Output
+#' Send Console Output via Webhook
 #'
 #' This functions accepts an expression whose console output you would like to send to the specified discord channel
 #'
@@ -176,11 +176,11 @@ send_current_ggplot <- function(conn = get_default_discord_connection(), filenam
 #'
 #' @examples
 #' \dontrun{
-#' send_console(2 + 2)
+#' send_webhook_console(2 + 2)
 #' }
 #' @seealso
 #' \code{\link{send_message}}, \code{\link{send_file}}, \code{\link{send_plot_code}}, \code{\link{send_current_ggplot}}
-send_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr'), tibble_formatting = FALSE){
+send_webhook_console <- function(..., conn = get_default_discord_connection(), filename = tempfile(pattern = 'discordr'), tibble_formatting = FALSE){
   res <- NULL
 
   if(length(list(...)) == 0){
@@ -222,7 +222,7 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
 
           for(console_output_index in 1:length(split_console_output)){
             current_console_output_split <- paste('```', split_console_output[console_output_index], '```', sep = '\n')
-            res[[console_output_index]] <- send_message(current_console_output_split, conn = conn)
+            res[[console_output_index]] <- send_webhook_message(current_console_output_split, conn = conn)
 
             #avoid timeout errors
             Sys.sleep(1)
@@ -230,7 +230,7 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
         }
         else {
           console_output <- paste('```', console_output, '```', sep = '\n')
-          res <- send_message(console_output, conn = conn)
+          res <- send_webhook_message(console_output, conn = conn)
         }
       }
       else {
@@ -245,7 +245,7 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
 
         for(row_index in 1:nrow(actual_break_indices)){
           formatted_console_substr <- paste('```', substr(console_output, actual_break_indices$start[row_index], actual_break_indices$stop[row_index] - 2), '```')
-          res[[row_index]] <- send_message(formatted_console_substr, conn = conn)
+          res[[row_index]] <- send_webhook_message(formatted_console_substr, conn = conn)
           Sys.sleep(1)
         }
       }
@@ -270,48 +270,15 @@ send_console <- function(..., conn = get_default_discord_connection(), filename 
 #' y <- matrix(rep(0, 4), rows = 2, cols = 2)
 #' send_robject(x, y, filename = 'test_data.RData')
 #' }
-send_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), conn = get_default_discord_connection()){
+send_webhook_robject <- function(..., filename = tempfile(pattern = 'discordr', fileext = '.RData'), conn = get_default_discord_connection()){
   res <- NULL
 
   if(length(list(...)) > 0){
     save(..., file = filename)
-    res <- send_file(filename, conn = conn)
+    res <- send_webhook_file(filename, conn = conn)
   }
   else {
     message('No objects provided.')
-  }
-
-  invisible(res)
-}
-
-#' Send Rendered Latex Images
-#'
-#' In order to use this function, you will need to install the texPreview package manually.
-#'
-#' @param tex_string Character string of compileable latex code. Ensure you are using double slashes ('\\') for commands.
-#' @param filename Default is a random string saved in the temporary directory; change this if you would like the RData file to be human-readable and in a different location.
-#' @param density Density of latex image to be saved. Default is 250.
-#' @param conn Discord Connection Object containing Webhook and Username
-#'
-#' @return None
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' tex_string <- "$\\int^a_b \\frac{1}{3}x^3 dx$"
-#' send_tex(tex_string, conn = conn_obj)
-#' }
-
-send_tex <- function(tex_string, filename = tempfile(pattern = 'discordr'), density = 250, conn = get_default_discord_connection()){
-
-  res <- NULL
-
-  if(nchar(tex_string) == 0){
-    message("No tex string provided.")
-  }
-  else {
-    texPreview::tex_preview(tex_string, stem = basename(filename), fileDir = dirname(filename), imgFormat = 'png', density = density)
-    res <- send_file(filename = paste(filename, '.png', sep = ''), conn = conn)
   }
 
   invisible(res)
