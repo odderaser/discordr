@@ -34,26 +34,26 @@ conn_obj <- create_discord_connection(webhook = 'your-webhook-here.com', usernam
 Once setup, there are five possible ways to interact with Discord through this package: sending messages, sending files, sending the current plot from RStudio, sending console output, sending r objects directly from RStudio, or even sending example compiled latex to others! For sending messages, use the `send_message` function with a character string. See package documentation if you are not setting a default username and/or default webhook
 
 ``` r
-send_message("Hello World!")
+send_webhook_message("Hello World!")
 ```
 For sending files, user the `send_file` function with the filepath as a character string.
 
 ``` r
-send_file("hello_world.jpg")
-send_file("updated_dataset.csv")
+send_webhook_file("hello_world.jpg")
+send_webhook_file("updated_dataset.csv")
 ```
 
 You can use the `send_plot_code` or `send_current_ggplot` functions to either compile and send a graphic or send the last plot shown in the Plots tab of RStudio. If using a ggplot workflow, using the appropriate `send_current_ggplot` function is recommended to obtain the highest image resolution.
 
 ``` r
-send_current_ggplot()
+send_webhook_current_ggplot()
 ```
 
 Maybe you're interested in sharing some model output. You can send console output properly formatted with code syntax using the `send_console` function.
 
 ``` r
 lm_model <- lm(x ~ y)
-send_console(summary(lm_model))
+send_webhook_console(summary(lm_model))
 ```
 
 You can bundle R objects you're working with into a single `RData` file to be sent to collaborators through the `send_robject` function.
@@ -62,14 +62,6 @@ You can bundle R objects you're working with into a single `RData` file to be se
 x <- c(1,2,3,4,5)
 y <- matrix(rep(0, 4), nrows = 2)
 send_robject(x, y, filename = 'my_data.RData')
-```
-
-Maybe you're interested in running that latex model description past someone, you can do so using the `send_tex` function. I expect this functionality to be used only by a small fraction of users, and I would like to respect users who would prefer not to install many packages as dependences. If you would like to use this functionality, you will need to install the `texPreview` package manually.  
-
-``` r
-# use double slashes where you would normally use single slashes...
-tex_string <- '$y_{ijk} = \\mu + \\alpha_i + \beta_j + \epsilon_{ijk}$'
-send_tex(tex_string)
 ```
 
 ## Issues & Feedback
